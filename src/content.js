@@ -5,10 +5,12 @@
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
 
-  const SYMBOL_PREFIX_RE = /([$€£¥₩])\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)\b/g;
-  const SYMBOL_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)\s*([$€£¥₩])/g;
-  const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)\b/gi;
-  const CODE_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
+  // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
+  const NUM_RE = /\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?/;
+  const SYMBOL_PREFIX_RE = /([$€£¥₩])\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\b/g;
+  const SYMBOL_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩])/g;
+  const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\b/gi;
+  const CODE_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
 
   const processedNodes = new WeakSet();
   let rates = null;
