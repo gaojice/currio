@@ -6,11 +6,11 @@
   const THROTTLE_MS = 500;
 
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
-  const NUM_RE = /\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?/;
-  const SYMBOL_PREFIX_RE = /([$€£¥₩])\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\b/g;
-  const SYMBOL_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩])/g;
-  const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\b/gi;
-  const CODE_SUFFIX_RE = /\b(\d{1,3}(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
+  const NUM_RE = /\d+(?:,\d{3})*(?:\.\d{1,6})?/;
+  const SYMBOL_PREFIX_RE = /([$€£¥₩])\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)\b/g;
+  const SYMBOL_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩])/g;
+  const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)\b/gi;
+  const CODE_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
 
   const processedNodes = new WeakSet();
   let rates = null;
@@ -21,13 +21,16 @@
 
   // ---- Init ----
   async function init() {
-    // Fetch settings and rates from background
-    const [settingsResp, ratesResp] = await Promise.all([
-      chrome.runtime.sendMessage({ type: "GET_SETTINGS" }),
-      chrome.runtime.sendMessage({ type: "GET_RATES" }),
-    ]);
-    settings = settingsResp;
-    rates = ratesResp?.rates ?? null;
+    try {
+      const [settingsResp, ratesResp] = await Promise.all([
+        chrome.runtime.sendMessage({ type: "GET_SETTINGS" }),
+        chrome.runtime.sendMessage({ type: "GET_RATES" }),
+      ]);
+      settings = settingsResp;
+      rates = ratesResp?.rates ?? null;
+    } catch {
+      return;
+    }
 
     if (!settings.autoEnabled) return;
     if (isBlacklisted()) return;

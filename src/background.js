@@ -1,9 +1,28 @@
-// Background service worker — exchange rates, caching, messaging
-importScripts("utils.js");
+// Background service worker — rates, caching, messaging
+
+// Inlined from utils.js — importScripts path resolution varies across Chrome versions
+const LOCALE_CURRENCY = {
+  "zh-TW": "TWD", "zh-CN": "CNY", "zh-HK": "HKD", "zh-SG": "SGD",
+  "en-US": "USD", "en-GB": "GBP", "en-CA": "CAD", "en-AU": "AUD",
+  "en-SG": "SGD",
+  "ja-JP": "JPY", "ko-KR": "KRW",
+  "de-DE": "EUR", "fr-FR": "EUR",
+};
+
+function detectDefaultCurrency() {
+  const langs = navigator.languages || [navigator.language];
+  for (const lang of langs) {
+    if (LOCALE_CURRENCY[lang]) return LOCALE_CURRENCY[lang];
+    const base = lang.split("-")[0];
+    if (base === "ja") return "JPY";
+    if (base === "ko") return "KRW";
+  }
+  return "USD";
+}
 
 const API_BASE = "https://api.exchangerate-api.com/v4/latest";
-const CACHE_TTL_MS = 45 * 60 * 1000; // 45 min
-const RETRY_BACKOFF_MS = 2 * 60 * 60 * 1000; // 2h after consecutive failures
+const CACHE_TTL_MS = 45 * 60 * 1000;
+const RETRY_BACKOFF_MS = 2 * 60 * 60 * 1000;
 const MAX_FAILURES = 3;
 
 let failureCount = 0;
@@ -13,7 +32,7 @@ let nextFetchTimer = null;
 chrome.runtime.onInstalled.addListener(async () => {
   const { targetCurrency } = await chrome.storage.local.get("targetCurrency");
   if (!targetCurrency) {
-    const detected = CurrioUtils.detectDefaultCurrency();
+    const detected = detectDefaultCurrency();
     await chrome.storage.local.set({
       targetCurrency: detected,
       displayMode: "inline",
@@ -33,7 +52,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 
     case "GET_SETTINGS":
       chrome.storage.local.get(["targetCurrency", "displayMode", "autoEnabled", "blacklist"])
-        .then(s => sendResponse(s));
+        .then(s => sendResponse({
+          targetCurrency: s.targetCurrency || "TWD",
+          displayMode: s.displayMode || "inline",
+          autoEnabled: s.autoEnabled !== false,
+          blacklist: s.blacklist || [],
+        }));
       return true;
 
     case "SET_SETTINGS":
@@ -45,12 +69,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   }
 });
 
-// ---- Broadcast to all content scripts ----
+// ---- Broadcast ----
 async function broadcastSettings(newSettings) {
   const tabs = await chrome.tabs.query({});
   for (const tab of tabs) {
     chrome.tabs.sendMessage(tab.id, { type: "SETTINGS_UPDATED", settings: newSettings })
-      .catch(() => {}); // tab may not have content script loaded
+      .catch(() => {});
   }
 }
 
@@ -71,10 +95,7 @@ async function fetchRates() {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     failureCount = 0;
-    return {
-      rates: data.rates,
-      timestamp: Date.now(),
-    };
+    return { rates: data.rates, timestamp: Date.now() };
   } catch (err) {
     failureCount++;
     console.warn(`[Currio] Rate fetch failed (#${failureCount}):`, err.message);
@@ -86,13 +107,12 @@ async function getCachedRates() {
   const { rateCache } = await chrome.storage.local.get("rateCache");
   if (!rateCache) return await fetchFreshAndCache();
   if (Date.now() - rateCache.timestamp < CACHE_TTL_MS) return rateCache;
-  // TTL expired — try refresh, fall back to stale
   const fresh = await fetchRates();
   if (fresh) {
     await chrome.storage.local.set({ rateCache: fresh });
     return fresh;
   }
-  return rateCache; // stale but usable
+  return rateCache;
 }
 
 async function fetchFreshAndCache() {

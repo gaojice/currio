@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Content</title>
+</head>
+<body>
+  <h1>Dynamic Content Test</h1>
+  <div id="container">
+    <p>Static price: $100</p>
+  </div>
+  <button id="addBtn">Add Price</button>
+  <script>
+    document.getElementById("addBtn").addEventListener("click", () => {
+      const p = document.createElement("p");
+      p.textContent = "Dynamic price: $200";
+      document.getElementById("container").appendChild(p);
+    });
+  </script>
+</body>
+</html>

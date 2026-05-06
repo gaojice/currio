@@ -3,3 +3,5 @@ node_modules/
 dist/
 *.zip
 .env
+test-results/
+e2e/.user-data/
