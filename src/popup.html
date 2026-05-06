@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Currio</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Currio</h1>
+
+    <label class="field">
+      <span>目标货币</span>
+      <select id="targetCurrency">
+        <optgroup label="亚洲">
+          <option value="TWD">TWD 新台币</option>
+          <option value="CNY">CNY 人民币</option>
+          <option value="JPY">JPY 日元</option>
+          <option value="KRW">KRW 韩元</option>
+          <option value="HKD">HKD 港币</option>
+          <option value="SGD">SGD 新加坡元</option>
+        </optgroup>
+        <optgroup label="其他">
+          <option value="USD">USD 美元</option>
+          <option value="EUR">EUR 欧元</option>
+          <option value="GBP">GBP 英镑</option>
+          <option value="AUD">AUD 澳元</option>
+          <option value="CAD">CAD 加元</option>
+        </optgroup>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>显示模式</span>
+      <select id="displayMode">
+        <option value="inline">Inline 内嵌</option>
+        <option value="tooltip">Tooltip 悬浮</option>
+      </select>
+    </label>
+
+    <label class="field checkbox-field">
+      <input type="checkbox" id="autoEnabled">
+      <span>自动启用</span>
+    </label>
+
+    <label class="field">
+      <span>黑名单（每行一个域名）</span>
+      <textarea id="blacklist" rows="3" placeholder="example.com&#10;bank.com"></textarea>
+    </label>
+
+    <div class="actions">
+      <button id="saveBtn" class="btn-primary">保存</button>
+      <span id="statusMsg"></span>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
