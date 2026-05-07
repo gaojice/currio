@@ -1,61 +1,58 @@
 import { test, expect } from "../extension.js";
 
-async function getTooltips(page) {
-  return page.$$eval(".currio-amount", els =>
-    els.map(el => el.title || "")
-  );
+async function getConversionTexts(page) {
+  return page.locator(".currio-converted").allTextContents();
 }
 
-async function waitForConversion(page, minCount = 1, timeout = 25000) {
-  await page.waitForSelector(".currio-amount", { timeout }).catch(() => {});
-  return page.locator(".currio-amount").count();
+async function waitForConversion(page, timeout = 25000) {
+  await page.waitForSelector(".currio-converted", { timeout }).catch(() => {});
+  return page.locator(".currio-converted").count();
 }
 
 // ============================================================
 test.describe("Basic currency recognition", () => {
-  test("recognizes $100 and converts", async ({ page }) => {
+  test("recognizes $100 and shows inline conversion", async ({ page }) => {
     await page.goto("/basic.html");
-    const cnt = await waitForConversion(page, 1);
+    const cnt = await waitForConversion(page);
     expect(cnt).toBeGreaterThanOrEqual(1);
 
-    const titles = await getTooltips(page);
-    titles.forEach(t => {
+    const texts = await getConversionTexts(page);
+    texts.forEach(t => {
       expect(t).toMatch(/≈/);
-      expect(t.trim()).not.toBe("");
     });
   });
 
   test("recognizes €50 and converts", async ({ page }) => {
     await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-    const titles = await getTooltips(page);
-    expect(titles.some(t => /≈/.test(t))).toBe(true);
+    await waitForConversion(page);
+    const texts = await getConversionTexts(page);
+    expect(texts.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes ¥1000 and converts", async ({ page }) => {
     await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-    const titles = await getTooltips(page);
-    expect(titles.some(t => /≈/.test(t))).toBe(true);
+    await waitForConversion(page);
+    const texts = await getConversionTexts(page);
+    expect(texts.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes £30 and converts", async ({ page }) => {
     await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-    const titles = await getTooltips(page);
-    expect(titles.some(t => /≈/.test(t))).toBe(true);
+    await waitForConversion(page);
+    const texts = await getConversionTexts(page);
+    expect(texts.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes $1,234.56 with thousands separator", async ({ page }) => {
     await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-    const titles = await getTooltips(page);
-    expect(titles.some(t => /≈/.test(t))).toBe(true);
+    await waitForConversion(page);
+    const texts = await getConversionTexts(page);
+    expect(texts.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("converts all 7 currency items on the page", async ({ page }) => {
     await page.goto("/basic.html");
-    const cnt = await waitForConversion(page, 1);
+    const cnt = await waitForConversion(page);
     expect(cnt).toBe(7);
   });
 });
@@ -71,7 +68,7 @@ test.describe("Fractional amounts", () => {
 
   test("converts all 4 fractional amounts", async ({ page }) => {
     await page.goto("/fractional.html");
-    const cnt = await waitForConversion(page, 1);
+    const cnt = await waitForConversion(page);
     expect(cnt).toBe(4);
   });
 });
@@ -80,7 +77,7 @@ test.describe("Fractional amounts", () => {
 test.describe("Currency code formats", () => {
   test("recognizes USD 100 (code prefix)", async ({ page }) => {
     await page.goto("/codes.html");
-    const cnt = await waitForConversion(page, 1);
+    const cnt = await waitForConversion(page);
     expect(cnt).toBeGreaterThanOrEqual(1);
   });
 
@@ -93,7 +90,7 @@ test.describe("Currency code formats", () => {
 
   test("recognizes lowercase currency codes", async ({ page }) => {
     await page.goto("/codes.html");
-    const cnt = await waitForConversion(page, 1);
+    const cnt = await waitForConversion(page);
     expect(cnt).toBeGreaterThanOrEqual(5);
   });
 });
@@ -102,18 +99,18 @@ test.describe("Currency code formats", () => {
 test.describe("Dynamic content", () => {
   test("converts dynamically inserted currency amounts", async ({ page }) => {
     await page.goto("/dynamic.html");
-    const initial = await waitForConversion(page, 1);
+    const initial = await waitForConversion(page);
     expect(initial).toBe(1);
 
     await page.click("#addBtn");
     await page.waitForTimeout(2000);
 
-    const updated = await page.locator(".currio-amount").count();
+    const updated = await page.locator(".currio-converted").count();
     expect(updated).toBe(2);
 
-    const titles = await getTooltips(page);
-    expect(titles.length).toBe(2);
-    titles.forEach(t => {
+    const texts = await getConversionTexts(page);
+    expect(texts.length).toBe(2);
+    texts.forEach(t => {
       expect(t).toMatch(/≈/);
     });
   });
@@ -124,7 +121,7 @@ test.describe("False positive prevention", () => {
   test("does not convert bare numbers without currency context", async ({ page }) => {
     await page.goto("/excluded.html");
     await page.waitForTimeout(5000);
-    const cnt = await page.locator(".currio-amount").count();
+    const cnt = await page.locator(".currio-converted").count();
     expect(cnt).toBe(0);
   });
 
@@ -134,63 +131,46 @@ test.describe("False positive prevention", () => {
     const body = await page.textContent("body");
     expect(body).toContain("$100");
     expect(body).toContain("$50");
-    const cnt = await page.locator(".currio-amount").count();
+    const cnt = await page.locator(".currio-converted").count();
     expect(cnt).toBe(0);
   });
 });
 
 // ============================================================
-test.describe("Hover tooltip style", () => {
-  test("tooltip contains approximate symbol", async ({ page }) => {
-    await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-
-    const title = await page.locator(".currio-amount").first().getAttribute("title");
-    expect(title).toMatch(/≈/);
-  });
-
-  test("wrapper has dotted underline", async ({ page }) => {
-    await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-
-    const bb = await page.locator(".currio-amount").first().evaluate(el =>
-      window.getComputedStyle(el).borderBottomStyle
-    );
-    expect(bb).toBe("dotted");
-  });
-
-  test("wrapper has help cursor", async ({ page }) => {
-    await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-
-    const cursor = await page.locator(".currio-amount").first().evaluate(el =>
-      window.getComputedStyle(el).cursor
-    );
-    expect(cursor).toBe("help");
-  });
-
-  test("amount text only shows original, no inline conversion", async ({ page }) => {
-    await page.goto("/basic.html");
-    await waitForConversion(page, 1);
-
-    const text = await page.locator(".currio-amount").first().textContent();
-    expect(text).not.toMatch(/≈/);
-  });
-
-  test("ambiguous $ gets dashed orange underline", async ({ page }) => {
-    // ambiguous.html has no lang attribute → $ defaults to USD without locale confirmation
+test.describe("Ambiguous $ handling", () => {
+  test("ambiguous $ gets dashed underline and title", async ({ page }) => {
+    // No lang attribute → $ defaults to USD without locale confirmation
     await page.goto("/ambiguous.html");
-    await waitForConversion(page, 1);
+    await waitForConversion(page);
 
-    const cls = await page.locator(".currio-amount").first().getAttribute("class");
+    const el = page.locator(".currio-ambiguous").first();
+    const cls = await el.getAttribute("class");
     expect(cls).toContain("currio-ambiguous");
 
-    const style = await page.locator(".currio-amount").first().evaluate(el => ({
+    const title = await el.getAttribute("title");
+    expect(title).toContain("USD");
+
+    const style = await el.evaluate(el => ({
       borderBottomStyle: window.getComputedStyle(el).borderBottomStyle,
-      borderBottomColor: window.getComputedStyle(el).borderBottomColor,
     }));
     expect(style.borderBottomStyle).toBe("dashed");
-    // Color should be orange-ish (rgb)
-    expect(style.borderBottomColor).toMatch(/rgb\(245|rgb\(246/);
+  });
+
+  test("confirmed $ (en-US page) does not get ambiguous class", async ({ page }) => {
+    await page.goto("/basic.html");
+    await waitForConversion(page);
+
+    const cnt = await page.locator(".currio-ambiguous").count();
+    expect(cnt).toBe(0);
+  });
+
+  test("inline conversion text is selectable", async ({ page }) => {
+    await page.goto("/basic.html");
+    await waitForConversion(page);
+
+    const sel = await page.locator(".currio-converted").first().evaluate(el =>
+      window.getComputedStyle(el).userSelect
+    );
+    expect(sel).not.toBe("none");
   });
 });

@@ -1,11 +1,11 @@
-/* Hover tooltip for converted amounts */
-.currio-amount {
-  border-bottom: 1px dotted #6b7280;
-  cursor: help;
+/* Inline conversion annotation */
+.currio-converted {
+  color: #6b7280;
+  font-size: 0.9em;
 }
 
-/* Ambiguous: $ assumed as USD without locale confirmation */
+/* Ambiguous $ assumed as USD — hover for detail */
 .currio-ambiguous {
-  border-bottom-style: dashed;
-  border-bottom-color: #f59e0b;
+  border-bottom: 1px dashed #f59e0b;
+  cursor: help;
 }

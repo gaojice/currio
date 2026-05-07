@@ -1,6 +1,6 @@
 // Content script — DOM scanning, currency recognition, inline rendering
 (() => {
-  const AMOUNT_CLASS = "currio-amount";
+  const CONVERTED_CLASS = "currio-converted";
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "CODE", "PRE", "NOSCRIPT"]);
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
@@ -53,7 +53,7 @@
         if (processedNodes.has(node)) return NodeFilter.FILTER_REJECT;
         const parent = node.parentElement;
         if (!parent || SKIP_TAGS.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
-        if (parent.closest(`.${AMOUNT_CLASS}`)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest(`.${CONVERTED_CLASS}`)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -171,19 +171,19 @@
 
     for (const r of sorted) {
       textNode.splitText(r.offset + r.length);
-      const matchNode = textNode.splitText(r.offset);
+      const afterNode = textNode.splitText(r.offset);
 
-      const wrapper = document.createElement("span");
-      wrapper.className = AMOUNT_CLASS;
-      wrapper.title = `≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)}`;
+      // Inline annotation span after the original text
+      const span = document.createElement("span");
+      span.className = CONVERTED_CLASS;
+      span.textContent = ` (≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)})`;
 
       if (isSourceAmbiguous(r)) {
-        wrapper.classList.add("currio-ambiguous");
-        wrapper.title += "\n（假定源货币为 USD）";
+        span.classList.add("currio-ambiguous");
+        span.title = "假定源货币为 USD";
       }
 
-      parent.replaceChild(wrapper, matchNode);
-      wrapper.appendChild(matchNode);
+      parent.insertBefore(span, afterNode);
     }
   }
 
@@ -255,9 +255,8 @@
   });
 
   function refreshExisting() {
-    // Unwrap existing tooltips and re-scan
-    document.querySelectorAll(`.${AMOUNT_CLASS}`).forEach(span => {
-      span.replaceWith(span.textContent);
+    document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => {
+      span.remove();
     });
     processedNodes = new WeakSet();
     scanDocument(document.body);

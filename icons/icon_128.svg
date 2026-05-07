@@ -1,0 +1,8 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs><clipPath id="cl"><rect width="128" height="128" rx="26"/></clipPath></defs>
+  <rect width="128" height="128" rx="26" fill="#F8F9FA"/>
+  <polygon points="0,0 128,0 0,128" fill="#4285F4" clip-path="url(#cl)"/>
+  <text x="38" y="62" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="white" text-anchor="middle">$</text>
+  <text x="90" y="114" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#4285F4" text-anchor="middle">¥</text>
+  <rect width="128" height="128" rx="26" fill="none" stroke="#E0E0E0" stroke-width="1"/>
+</svg>
