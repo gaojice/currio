@@ -183,7 +183,7 @@
         span.title = "假定源货币为 USD";
       }
 
-      parent.insertBefore(span, afterNode);
+      afterNode.after(span);
     }
   }
 
