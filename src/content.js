@@ -272,40 +272,39 @@
   // ---- MutationObserver ----
   function startObserver() {
     if (observer) return;
-    observer = new MutationObserver(mutations => {
-      if (scanScheduled) return;
+    let pendingNodes = [];
 
-      const now = Date.now();
-      if (now - lastScanTime < THROTTLE_MS) {
-        // Still in throttle window — schedule deferred
-        scanScheduled = true;
-        setTimeout(() => {
-          scanScheduled = false;
-          lastScanTime = Date.now();
-          for (const m of mutations) {
-            for (const node of m.addedNodes) {
-              if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
-                scanDocument(node);
-              }
-            }
+    observer = new MutationObserver(mutations => {
+      // Collect all added nodes
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
+            pendingNodes.push(node);
           }
-        }, THROTTLE_MS - (now - lastScanTime));
-        return;
+        }
       }
 
+      if (scanScheduled) return;
+      scheduleScan();
+    });
+
+    function scheduleScan() {
       scanScheduled = true;
+      const now = Date.now();
+      const delay = (now - lastScanTime < THROTTLE_MS) ? THROTTLE_MS - (now - lastScanTime) : DEBOUNCE_MS;
+
       setTimeout(() => {
         scanScheduled = false;
         lastScanTime = Date.now();
-        for (const m of mutations) {
-          for (const node of m.addedNodes) {
-            if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
-              scanDocument(node);
-            }
+        const nodes = pendingNodes;
+        pendingNodes = [];
+        for (const node of nodes) {
+          if (document.contains(node)) {
+            scanDocument(node);
           }
         }
-      }, DEBOUNCE_MS);
-    });
+      }, delay);
+    }
 
     observer.observe(document.body, {
       childList: true,
