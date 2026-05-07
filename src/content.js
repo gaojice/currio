@@ -278,32 +278,41 @@
   function startObserver() {
     if (observer) return;
     let pendingNodes = [];
+    const seenNodes = new WeakSet();
 
     observer = new MutationObserver(mutations => {
-      // Collect all added nodes + parents of changed text nodes
       for (const m of mutations) {
         if (m.type === "characterData") {
+          // Only react to text changes that contain currency symbols
+          if (!hasSymbol.test(m.target.textContent)) continue;
           const parent = m.target.parentElement;
           if (parent && !SKIP_TAGS.has(parent.tagName) && !parent.closest(`.${CONVERTED_CLASS}`)) {
-            pendingNodes.push(parent);
+            if (!seenNodes.has(parent)) {
+              seenNodes.add(parent);
+              pendingNodes.push(parent);
+            }
           }
         } else {
           for (const node of m.addedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
-              pendingNodes.push(node);
+              if (!seenNodes.has(node)) {
+                seenNodes.add(node);
+                pendingNodes.push(node);
+              }
             }
           }
         }
       }
 
-      if (scanScheduled) return;
+      if (scanScheduled || pendingNodes.length === 0) return;
       scheduleScan();
     });
 
     function scheduleScan() {
       scanScheduled = true;
-      const now = Date.now();
-      const delay = (now - lastScanTime < THROTTLE_MS) ? THROTTLE_MS - (now - lastScanTime) : DEBOUNCE_MS;
+      const delay = Date.now() - lastScanTime < THROTTLE_MS
+        ? THROTTLE_MS - (Date.now() - lastScanTime)
+        : DEBOUNCE_MS;
 
       setTimeout(() => {
         scanScheduled = false;
@@ -311,6 +320,7 @@
         const nodes = pendingNodes;
         pendingNodes = [];
         for (const node of nodes) {
+          seenNodes.delete(node);
           if (document.contains(node)) {
             scanDocument(node);
           }
