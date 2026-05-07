@@ -4,6 +4,7 @@
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "CODE", "PRE", "NOSCRIPT"]);
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
+  const hasSymbol = /[$€£¥₩]/;
 
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
   const NUM_RE = /\d+(?:,\d{3})*(?:\.\d{1,6})?/;
@@ -59,7 +60,6 @@
     });
 
     const mutations = [];
-    const hasSymbol = /[$€£¥₩]/;
     let node;
     while ((node = walker.nextNode())) {
       const replacements = processText(node.textContent, 0);
@@ -285,6 +285,8 @@
         if (m.type === "characterData") {
           // Only react to text changes that contain currency symbols
           if (!hasSymbol.test(m.target.textContent)) continue;
+          // Allow re-scanning this text node (price changed in-place)
+          processedNodes.delete(m.target);
           const parent = m.target.parentElement;
           if (parent && !SKIP_TAGS.has(parent.tagName) && !parent.closest(`.${CONVERTED_CLASS}`)) {
             if (!seenNodes.has(parent)) {
