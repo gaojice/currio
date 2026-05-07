@@ -52,8 +52,9 @@ let nextFetchTimer = null;
 // ---- Install ----
 chrome.runtime.onInstalled.addListener(async () => {
   const { targetCurrency } = await chrome.storage.local.get("targetCurrency");
+  let detected;
   if (!targetCurrency) {
-    const detected = detectDefaultCurrency();
+    detected = detectDefaultCurrency();
     await chrome.storage.local.set({
       targetCurrency: detected,
       autoEnabled: true,
