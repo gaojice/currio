@@ -35,10 +35,17 @@
       <span>自动启用</span>
     </label>
 
-    <label class="field">
-      <span>黑名单（每行一个域名）</span>
-      <textarea id="blacklist" rows="3" placeholder="example.com&#10;bank.com"></textarea>
-    </label>
+    <div class="blacklist-section">
+      <div class="current-domain" id="currentDomainBlock">
+        <span class="domain-label">当前网站</span>
+        <span class="domain-name" id="currentDomainName">—</span>
+        <button id="toggleDomainBtn" class="btn-small"></button>
+      </div>
+      <details id="blacklistDetails">
+        <summary>黑名单（<span id="blacklistCount">0</span> 个）</summary>
+        <textarea id="blacklist" rows="4" placeholder="example.com&#10;bank.com"></textarea>
+      </details>
+    </div>
 
     <div class="actions">
       <button id="saveBtn" class="btn-primary">保存</button>
