@@ -35,7 +35,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     const detected = detectDefaultCurrency();
     await chrome.storage.local.set({
       targetCurrency: detected,
-      displayMode: "inline",
       autoEnabled: true,
       blacklist: [],
     });
@@ -51,10 +50,9 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       return true;
 
     case "GET_SETTINGS":
-      chrome.storage.local.get(["targetCurrency", "displayMode", "autoEnabled", "blacklist"])
+      chrome.storage.local.get(["targetCurrency", "autoEnabled", "blacklist"])
         .then(s => sendResponse({
           targetCurrency: s.targetCurrency || "TWD",
-          displayMode: s.displayMode || "inline",
           autoEnabled: s.autoEnabled !== false,
           blacklist: s.blacklist || [],
         }));
