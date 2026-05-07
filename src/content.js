@@ -280,11 +280,18 @@
     let pendingNodes = [];
 
     observer = new MutationObserver(mutations => {
-      // Collect all added nodes
+      // Collect all added nodes + parents of changed text nodes
       for (const m of mutations) {
-        for (const node of m.addedNodes) {
-          if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
-            pendingNodes.push(node);
+        if (m.type === "characterData") {
+          const parent = m.target.parentElement;
+          if (parent && !SKIP_TAGS.has(parent.tagName) && !parent.closest(`.${CONVERTED_CLASS}`)) {
+            pendingNodes.push(parent);
+          }
+        } else {
+          for (const node of m.addedNodes) {
+            if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
+              pendingNodes.push(node);
+            }
           }
         }
       }
@@ -314,6 +321,7 @@
     observer.observe(document.body, {
       childList: true,
       subtree: true,
+      characterData: true,
     });
   }
 
