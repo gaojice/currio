@@ -158,6 +158,7 @@
   // ---- Conversion ----
   function convert(amount, sourceCurrency) {
     if (!rates || !rates[sourceCurrency] || !rates[settings.targetCurrency]) return null;
+    if (sourceCurrency === settings.targetCurrency) return null;
     const usdValue = amount / rates[sourceCurrency];
     return Math.round(usdValue * rates[settings.targetCurrency] * 100) / 100;
   }

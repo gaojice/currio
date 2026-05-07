@@ -1,8 +1,0 @@
-<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-  <defs><clipPath id="cl"><rect width="16" height="16" rx="3"/></clipPath></defs>
-  <rect width="16" height="16" rx="3" fill="#F8F9FA"/>
-  <polygon points="0,0 16,0 0,16" fill="#4285F4" clip-path="url(#cl)"/>
-  <text x="4.5" y="8" font-family="Arial, sans-serif" font-size="6" font-weight="700" fill="white" text-anchor="middle">$</text>
-  <text x="11.5" y="14" font-family="Arial, sans-serif" font-size="6" font-weight="700" fill="#4285F4" text-anchor="middle">¥</text>
-  <rect width="16" height="16" rx="3" fill="none" stroke="#E0E0E0" stroke-width="1"/>
-</svg>
