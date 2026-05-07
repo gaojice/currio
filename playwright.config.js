@@ -3,6 +3,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "e2e/specs",
   timeout: 30000,
+  fullyParallel: true,
   workers: 2,
   use: {
     browserName: "chromium",
