@@ -1,0 +1,6 @@
+services:
+  test:
+    build: .
+    image: currio-e2e
+    # Run tests on docker compose up, exit afterward
+    command: sh -c "Xvfb :99 -screen 0 1280x720x24 &> /dev/null & sleep 1 && DISPLAY=:99 npx playwright test"
