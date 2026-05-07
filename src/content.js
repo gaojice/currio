@@ -115,6 +115,9 @@
       const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
       if (!endNode) continue;
 
+      // Skip if already annotated
+      if (endNode.nextElementSibling?.classList?.contains(CONVERTED_CLASS)) continue;
+
       const span = document.createElement("span");
       span.className = CONVERTED_CLASS;
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
@@ -240,7 +243,9 @@
       textNode.splitText(r.offset + r.length);
       const afterNode = textNode.splitText(r.offset);
 
-      // Inline annotation after the original text, dashed border, no ≈
+      // Skip if already annotated (prevents double processing)
+      if (afterNode.nextElementSibling?.classList?.contains(CONVERTED_CLASS)) continue;
+
       const span = document.createElement("span");
       span.className = CONVERTED_CLASS;
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
