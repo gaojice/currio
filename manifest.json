@@ -3,7 +3,7 @@
   "name": "Currio",
   "version": "1.0.0",
   "description": "Auto currency converter — recognize and convert money amounts on any page",
-  "permissions": ["storage"],
+  "permissions": ["storage", "activeTab"],
   "host_permissions": [
     "https://api.exchangerate-api.com/*"
   ],

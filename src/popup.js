@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const [settings, tabs] = await Promise.all([
     chrome.runtime.sendMessage({ type: "GET_SETTINGS" }),
-    chrome.tabs.query({ active: true, currentWindow: true }),
+    chrome.tabs.query({ active: true, currentWindow: true }).catch(() => []),
   ]);
 
   const tab = tabs[0];
