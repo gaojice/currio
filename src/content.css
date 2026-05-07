@@ -1,5 +1,5 @@
-/* Inline conversion annotation */
-.currio-converted {
-  color: #6b7280;
-  font-size: 0.9em;
+/* Hover tooltip for converted amounts */
+.currio-amount {
+  border-bottom: 1px dotted #6b7280;
+  cursor: help;
 }

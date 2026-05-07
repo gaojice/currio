@@ -1,6 +1,6 @@
 // Content script — DOM scanning, currency recognition, inline rendering
 (() => {
-  const CONVERTED_CLASS = "currio-converted";
+  const AMOUNT_CLASS = "currio-amount";
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "CODE", "PRE", "NOSCRIPT"]);
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
@@ -53,7 +53,7 @@
         if (processedNodes.has(node)) return NodeFilter.FILTER_REJECT;
         const parent = node.parentElement;
         if (!parent || SKIP_TAGS.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
-        if (parent.closest(`.${CONVERTED_CLASS}`)) return NodeFilter.FILTER_REJECT;
+        if (parent.closest(`.${AMOUNT_CLASS}`)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -171,30 +171,30 @@
     const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
 
     for (const r of sorted) {
-      // Split at end of original match → [textBefore+match, textAfter]
-      const afterNode = textNode.splitText(r.offset + r.length);
-      // Split at start of match → [textBefore, textNode=original match]
-      textNode.splitText(r.offset);
+      // Split at end of match → [textBefore+match, textAfter]
+      textNode.splitText(r.offset + r.length);
+      // Split at start of match → matchNode = [offset, offset+length)
+      const matchNode = textNode.splitText(r.offset);
 
-      const annotation = buildAnnotation(r);
-      parent.insertBefore(annotation, afterNode);
+      // Wrap matchNode in a span with tooltip
+      const wrapper = document.createElement("span");
+      wrapper.className = AMOUNT_CLASS;
+      wrapper.title = buildTooltip(r);
+      parent.replaceChild(wrapper, matchNode);
+      wrapper.appendChild(matchNode);
     }
   }
 
-  function buildAnnotation(r) {
-    const span = document.createElement("span");
-    span.className = CONVERTED_CLASS;
-
+  function buildTooltip(r) {
+    const converted = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
     const sourceIsAmbiguous =
-      CurrioUtils.CURRENCY_SYMBOL_MAP["$"]?.includes(r.sourceCurrency) &&
       r.sourceCurrency === "USD" &&
-      !CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang];
+      CurrioUtils.CURRENCY_SYMBOL_MAP["$"]?.includes(r.sourceCurrency) &&
+      CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang] !== "USD";
 
-    span.textContent = sourceIsAmbiguous
-      ? ` (≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)}, 按 USD)`
-      : ` (≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)})`;
-
-    return span;
+    return sourceIsAmbiguous
+      ? `≈ ${converted}（按 USD）`
+      : `≈ ${converted}`;
   }
 
   // ---- MutationObserver ----
@@ -257,9 +257,9 @@
   });
 
   function refreshExisting() {
-    // Update conversion annotations without re-scanning text nodes
-    document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => {
-      span.remove();
+    // Unwrap existing tooltips and re-scan
+    document.querySelectorAll(`.${AMOUNT_CLASS}`).forEach(span => {
+      span.replaceWith(span.textContent);
     });
     processedNodes = new WeakSet();
     scanDocument(document.body);

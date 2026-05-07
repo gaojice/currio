@@ -1,12 +1,14 @@
 import { test, expect } from "../extension.js";
 
-async function getConversionTexts(page) {
-  return page.locator(".currio-converted").allTextContents();
+async function getTooltips(page) {
+  return page.$$eval(".currio-amount", els =>
+    els.map(el => el.title || "")
+  );
 }
 
 async function waitForConversion(page, minCount = 1, timeout = 25000) {
-  await page.waitForSelector(".currio-converted", { timeout }).catch(() => {});
-  return page.locator(".currio-converted").count();
+  await page.waitForSelector(".currio-amount", { timeout }).catch(() => {});
+  return page.locator(".currio-amount").count();
 }
 
 // ============================================================
@@ -16,9 +18,8 @@ test.describe("Basic currency recognition", () => {
     const cnt = await waitForConversion(page, 1);
     expect(cnt).toBeGreaterThanOrEqual(1);
 
-    const texts = await getConversionTexts(page);
-    // Every annotation uses ≈ and a currency symbol
-    texts.forEach(t => {
+    const titles = await getTooltips(page);
+    titles.forEach(t => {
       expect(t).toMatch(/≈/);
       expect(t.trim()).not.toBe("");
     });
@@ -27,29 +28,29 @@ test.describe("Basic currency recognition", () => {
   test("recognizes €50 and converts", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
-    const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    const titles = await getTooltips(page);
+    expect(titles.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes ¥1000 and converts", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
-    const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    const titles = await getTooltips(page);
+    expect(titles.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes £30 and converts", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
-    const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    const titles = await getTooltips(page);
+    expect(titles.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("recognizes $1,234.56 with thousands separator", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
-    const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    const titles = await getTooltips(page);
+    expect(titles.some(t => /≈/.test(t))).toBe(true);
   });
 
   test("converts all 7 currency items on the page", async ({ page }) => {
@@ -107,12 +108,12 @@ test.describe("Dynamic content", () => {
     await page.click("#addBtn");
     await page.waitForTimeout(2000);
 
-    const updated = await page.locator(".currio-converted").count();
+    const updated = await page.locator(".currio-amount").count();
     expect(updated).toBe(2);
 
-    const texts = await getConversionTexts(page);
-    expect(texts.length).toBe(2);
-    texts.forEach(t => {
+    const titles = await getTooltips(page);
+    expect(titles.length).toBe(2);
+    titles.forEach(t => {
       expect(t).toMatch(/≈/);
     });
   });
@@ -123,7 +124,7 @@ test.describe("False positive prevention", () => {
   test("does not convert bare numbers without currency context", async ({ page }) => {
     await page.goto("/excluded.html");
     await page.waitForTimeout(5000);
-    const cnt = await page.locator(".currio-converted").count();
+    const cnt = await page.locator(".currio-amount").count();
     expect(cnt).toBe(0);
   });
 
@@ -133,20 +134,41 @@ test.describe("False positive prevention", () => {
     const body = await page.textContent("body");
     expect(body).toContain("$100");
     expect(body).toContain("$50");
-    const cnt = await page.locator(".currio-converted").count();
+    const cnt = await page.locator(".currio-amount").count();
     expect(cnt).toBe(0);
   });
 });
 
 // ============================================================
-test.describe("Selectable text", () => {
-  test("converted annotation text is selectable", async ({ page }) => {
+test.describe("Hover tooltip style", () => {
+  test("amount wrapper has dotted underline", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
 
-    const sel = await page.locator(".currio-converted").first().evaluate(el =>
-      window.getComputedStyle(el).userSelect
+    const bb = await page.locator(".currio-amount").first().evaluate(el =>
+      window.getComputedStyle(el).borderBottomStyle
     );
-    expect(sel).not.toBe("none");
+    // Should have a border-bottom (dotted)
+    expect(bb).not.toBe("none");
+  });
+
+  test("amount wrapper has help cursor", async ({ page }) => {
+    await page.goto("/basic.html");
+    await waitForConversion(page, 1);
+
+    const cursor = await page.locator(".currio-amount").first().evaluate(el =>
+      window.getComputedStyle(el).cursor
+    );
+    expect(cursor).toBe("help");
+  });
+
+  test("amount text does not show inline conversion", async ({ page }) => {
+    await page.goto("/basic.html");
+    await waitForConversion(page, 1);
+
+    // The wrapper span should only contain the original amount text
+    // not the "(≈ ...)" annotation
+    const text = await page.locator(".currio-amount").first().textContent();
+    expect(text).not.toMatch(/≈/);
   });
 });
