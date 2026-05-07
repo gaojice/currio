@@ -18,7 +18,7 @@ test.describe("Basic currency recognition", () => {
 
     const texts = await getConversionTexts(page);
     texts.forEach(t => {
-      expect(t).toMatch(/≈/);
+      expect(t).toMatch(/[¥$€£₩NT]/);
     });
   });
 
@@ -26,28 +26,28 @@ test.describe("Basic currency recognition", () => {
     await page.goto("/basic.html");
     await waitForConversion(page);
     const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    expect(texts.some(t => /[¥$€£₩NT]/.test(t))).toBe(true);
   });
 
   test("recognizes ¥1000 and converts", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page);
     const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    expect(texts.some(t => /[¥$€£₩NT]/.test(t))).toBe(true);
   });
 
   test("recognizes £30 and converts", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page);
     const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    expect(texts.some(t => /[¥$€£₩NT]/.test(t))).toBe(true);
   });
 
   test("recognizes $1,234.56 with thousands separator", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page);
     const texts = await getConversionTexts(page);
-    expect(texts.some(t => /≈/.test(t))).toBe(true);
+    expect(texts.some(t => /[¥$€£₩NT]/.test(t))).toBe(true);
   });
 
   test("converts all 7 currency items on the page", async ({ page }) => {
@@ -111,7 +111,7 @@ test.describe("Dynamic content", () => {
     const texts = await getConversionTexts(page);
     expect(texts.length).toBe(2);
     texts.forEach(t => {
-      expect(t).toMatch(/≈/);
+      expect(t).toMatch(/[¥$€£₩NT]/);
     });
   });
 });
@@ -138,7 +138,7 @@ test.describe("False positive prevention", () => {
 
 // ============================================================
 test.describe("Ambiguous $ handling", () => {
-  test("ambiguous $ gets dashed underline and data-tip", async ({ page }) => {
+  test("ambiguous $ gets yellow dashed border and data-tip", async ({ page }) => {
     // No lang attribute → $ defaults to USD without locale confirmation
     await page.goto("/ambiguous.html");
     await waitForConversion(page);
@@ -151,9 +151,10 @@ test.describe("Ambiguous $ handling", () => {
     expect(tip).toContain("USD");
 
     const style = await el.evaluate(el => ({
-      borderBottomStyle: window.getComputedStyle(el).borderBottomStyle,
+      borderTopColor: window.getComputedStyle(el).borderTopColor,
     }));
-    expect(style.borderBottomStyle).toBe("dashed");
+    // Yellow/orange border
+    expect(style.borderTopColor).toMatch(/rgb\(245|rgb\(246/);
   });
 
   test("confirmed $ (en-US page) does not get ambiguous class", async ({ page }) => {
@@ -164,13 +165,15 @@ test.describe("Ambiguous $ handling", () => {
     expect(cnt).toBe(0);
   });
 
-  test("inline conversion text is selectable", async ({ page }) => {
+  test("conversion annotation has dashed border", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page);
 
-    const sel = await page.locator(".currio-converted").first().evaluate(el =>
-      window.getComputedStyle(el).userSelect
-    );
-    expect(sel).not.toBe("none");
+    const style = await page.locator(".currio-converted").first().evaluate(el => ({
+      borderStyle: window.getComputedStyle(el).borderTopStyle,
+      userSelect: window.getComputedStyle(el).userSelect,
+    }));
+    expect(style.borderStyle).toBe("dashed");
+    expect(style.userSelect).not.toBe("none");
   });
 });

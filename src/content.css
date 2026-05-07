@@ -1,13 +1,16 @@
-/* Inline conversion annotation */
+/* Inline conversion annotation — dashed border, no ≈ */
 .currio-converted {
   color: #6b7280;
   font-size: 0.9em;
+  border: 1px dashed #9ca3af;
+  padding: 0 3px;
+  border-radius: 3px;
 }
 
-/* Ambiguous $ assumed as USD — instant CSS tooltip on hover */
+/* Ambiguous $ — yellow dashed border + instant tooltip */
 .currio-ambiguous {
   position: relative;
-  border-bottom: 1px dashed #f59e0b;
+  border-color: #f59e0b;
   cursor: help;
 }
 

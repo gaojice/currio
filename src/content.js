@@ -173,10 +173,10 @@
       textNode.splitText(r.offset + r.length);
       const afterNode = textNode.splitText(r.offset);
 
-      // Inline annotation span after the original text
+      // Inline annotation after the original text, dashed border, no ≈
       const span = document.createElement("span");
       span.className = CONVERTED_CLASS;
-      span.textContent = ` (≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)})`;
+      span.textContent = ` ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)}`;
 
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
