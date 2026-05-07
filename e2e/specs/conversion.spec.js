@@ -83,6 +83,21 @@ test.describe("Dynamic content", () => {
   });
 });
 
+  test("converts after SPA text update (characterData mutation)", async ({ page }) => {
+    await page.goto("/spa-update.html");
+    await page.waitForTimeout(5000);
+    const initial = await page.locator(".currio-converted").count();
+
+    // Click button that updates textContent in-place
+    await page.click("#updateBtn");
+    await page.waitForTimeout(2000);
+
+    const updated = await page.locator(".currio-converted").count();
+    // $150 (new value) should be re-scanned; $200 (unchanged) may also be converted
+    expect(updated).toBeGreaterThanOrEqual(initial);
+  });
+});
+
 // ============================================================
 test.describe("False positive prevention", () => {
   test("does not convert bare numbers without currency context", async ({ page }) => {

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>SPA Text Update</title>
+</head>
+<body>
+  <h1>Simulate SPA price updates (characterData mutations)</h1>
+  <p id="price1">$100</p>
+  <p id="price2">$200</p>
+  <button id="updateBtn">Update price1 text</button>
+  <script>
+    document.getElementById("updateBtn").addEventListener("click", () => {
+      // Simulate SPA updating text content in-place (characterData mutation)
+      document.getElementById("price1").firstChild.textContent = "$150";
+    });
+  </script>
+</body>
+</html>
