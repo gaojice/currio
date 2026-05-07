@@ -1,10 +1,11 @@
 /* Inline conversion annotation — dashed border, no ≈ */
 .currio-converted {
   color: #6b7280;
-  font-size: 0.9em;
+  font-size: 0.75em;
   border: 1px dashed #9ca3af;
-  padding: 0 3px;
+  padding: 0;
   border-radius: 3px;
+  margin-left: 3px;
 }
 
 /* Ambiguous $ — yellow dashed border + instant tooltip */
