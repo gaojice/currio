@@ -16,6 +16,7 @@ export const test = base.extend({
       args: [
         `--disable-extensions-except=${EXT_PATH}`,
         `--load-extension=${EXT_PATH}`,
+        "--window-size=200,150",
       ],
       headless: false,
     });
