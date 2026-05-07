@@ -1,4 +1,4 @@
-// Popup settings UI
+// Popup settings UI — changes take effect immediately
 document.addEventListener("DOMContentLoaded", async () => {
   const [settings, tabs] = await Promise.all([
     chrome.runtime.sendMessage({ type: "GET_SETTINGS" }),
@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const $target = document.getElementById("targetCurrency");
   const $auto = document.getElementById("autoEnabled");
   const $blacklist = document.getElementById("blacklist");
-  const $save = document.getElementById("saveBtn");
-  const $status = document.getElementById("statusMsg");
   const $domainName = document.getElementById("currentDomainName");
   const $toggleBtn = document.getElementById("toggleDomainBtn");
   const $blacklistCount = document.getElementById("blacklistCount");
@@ -44,6 +42,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Auto-save on any change
+  $target.addEventListener("change", save);
+  $auto.addEventListener("change", save);
+  $blacklist.addEventListener("blur", save);
+
   $toggleBtn.addEventListener("click", () => {
     let list = $blacklist.value
       .split("\n")
@@ -60,12 +63,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     $blacklist.value = list.join("\n");
     $blacklistCount.textContent = list.length;
     updateToggleBtn();
-    autoSave();
+    save();
   });
 
-  $save.addEventListener("click", autoSave);
-
-  async function autoSave() {
+  async function save() {
     const newSettings = {
       targetCurrency: $target.value,
       autoEnabled: $auto.checked,
@@ -80,15 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       settings: newSettings,
     });
 
-    // Notify current tab's content script to refresh conversions immediately
     if (tab?.id) {
       chrome.tabs.sendMessage(tab.id, {
         type: "SETTINGS_UPDATED",
         settings: newSettings,
       }).catch(() => {});
     }
-
-    $status.textContent = "已保存";
-    setTimeout(() => { $status.textContent = ""; }, 1500);
   }
 });
