@@ -67,10 +67,9 @@
         mutations.push({ node, replacements });
         processedNodes.add(node);
       } else if (replacements.length === 0 && hasSymbol.test(node.textContent)) {
-        // $ alone in a text node — walk up to find an inline ancestor with combined text
-        const inlineTags = new Set(["SPAN", "A", "LABEL", "B", "STRONG", "EM", "I", "U", "SMALL", "MARK"]);
+        // Symbol alone in a text node — walk up ancestors to find combined text
         let ancestor = node.parentElement;
-        while (ancestor && inlineTags.has(ancestor.tagName) && ancestor.textContent.length <= 200) {
+        while (ancestor && ancestor.textContent.length <= 200) {
           if (!processedNodes.has(ancestor)) {
             const fullText = ancestor.textContent;
             const parentMatches = processText(fullText, 0);
@@ -188,7 +187,8 @@
       sourceCurrency = CurrioUtils.inferSourceCurrency(
         symbol,
         document.documentElement.lang,
-        location.hostname
+        location.hostname,
+        navigator.language
       );
     }
 

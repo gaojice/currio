@@ -49,10 +49,10 @@ var CurrioUtils = (() => {
     return "USD";
   }
 
-  // Default fallback for ambiguous symbols
-  const SYMBOL_DEFAULT = { "$": "USD", "¥": "JPY" };
+  // Default fallback for ambiguous symbols (¥ → CNY more common on the web)
+  const SYMBOL_DEFAULT = { "$": "USD", "¥": "CNY" };
 
-  function inferSourceCurrency(symbol, pageLang, hostname) {
+  function inferSourceCurrency(symbol, pageLang, hostname, browserLang) {
     const candidates = CURRENCY_SYMBOL_MAP[symbol];
     if (!candidates) return null;
     if (candidates.length === 1) return candidates[0];
@@ -60,6 +60,11 @@ var CurrioUtils = (() => {
     // Multi-candidate symbols ($, ¥) — try page locale first
     if (pageLang && LOCALE_CURRENCY[pageLang] && candidates.includes(LOCALE_CURRENCY[pageLang])) {
       return LOCALE_CURRENCY[pageLang];
+    }
+
+    // Fall back to browser language
+    if (browserLang && LOCALE_CURRENCY[browserLang] && candidates.includes(LOCALE_CURRENCY[browserLang])) {
+      return LOCALE_CURRENCY[browserLang];
     }
 
     // Try TLD
