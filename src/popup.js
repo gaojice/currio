@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tab = tabs[0];
   const hostname = tab ? new URL(tab.url).hostname.replace(/^www\./, "") : null;
   const blacklist = settings.blacklist || [];
-  const isBlacklisted = hostname && blacklist.some(b => hostname.includes(b));
 
   const $target = document.getElementById("targetCurrency");
   const $auto = document.getElementById("autoEnabled");
@@ -20,13 +19,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const $blacklistCount = document.getElementById("blacklistCount");
   const $domainBlock = document.getElementById("currentDomainBlock");
 
-  // Populate form
   $target.value = settings.targetCurrency || "TWD";
   $auto.checked = settings.autoEnabled !== false;
   $blacklist.value = blacklist.join("\n");
   $blacklistCount.textContent = blacklist.length;
 
-  // Current domain
   if (hostname) {
     $domainName.textContent = hostname;
     updateToggleBtn();
@@ -47,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Toggle current domain in blacklist
   $toggleBtn.addEventListener("click", () => {
     let list = $blacklist.value
       .split("\n")
@@ -67,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     autoSave();
   });
 
-  // Save
   $save.addEventListener("click", autoSave);
 
   async function autoSave() {
@@ -84,6 +79,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       type: "SET_SETTINGS",
       settings: newSettings,
     });
+
+    // Notify current tab's content script to refresh conversions immediately
+    if (tab?.id) {
+      chrome.tabs.sendMessage(tab.id, {
+        type: "SETTINGS_UPDATED",
+        settings: newSettings,
+      }).catch(() => {});
+    }
 
     $status.textContent = "已保存";
     setTimeout(() => { $status.textContent = ""; }, 1500);
