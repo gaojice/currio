@@ -1,14 +1,45 @@
-/* Inline conversion annotation — dashed border, no ≈ */
+/* Inline conversion via CSS ::after (React-proof — DOM-less) */
+[data-currio-converted]::after {
+  content: " " attr(data-currio-converted);
+  color: #6b7280;
+  font-size: 0.75em;
+  border: 1px dashed #9ca3af;
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-left: 3px;
+}
+
+[data-currio-ambiguous]::after {
+  border-color: #f59e0b;
+}
+
+/* Ambiguous tooltip via title-like ::before on hover */
+[data-currio-ambiguous]:hover::before {
+  content: attr(data-currio-tip);
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2147483647;
+}
+
+/* Fallback: span-based annotation (multi-price text nodes) */
 .currio-converted {
   color: #6b7280;
   font-size: 0.75em;
   border: 1px dashed #9ca3af;
-  padding: 0 4px;
   border-radius: 3px;
+  padding: 0 4px;
   margin-left: 3px;
 }
 
-/* Ambiguous $ — yellow dashed border + instant tooltip */
 .currio-ambiguous {
   position: relative;
   border-color: #f59e0b;

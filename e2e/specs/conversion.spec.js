@@ -1,12 +1,25 @@
 import { test, expect } from "../extension.js";
 
 async function getConversionTexts(page) {
-  return page.locator(".currio-converted").allTextContents();
+  // Both data-attribute (React-proof) and span-based annotations
+  const data = await page.$$eval("[data-currio-converted]", els =>
+    els.map(el => el.getAttribute("data-currio-converted"))
+  );
+  const spans = await page.locator(".currio-converted").allTextContents();
+  return [...data, ...spans];
+}
+
+async function countConversions(page) {
+  const data = await page.locator("[data-currio-converted]").count();
+  const spans = await page.locator(".currio-converted").count();
+  return data + spans;
 }
 
 async function waitForConversion(page, timeout = 25000) {
-  await page.waitForSelector(".currio-converted", { timeout }).catch(() => {});
-  return page.locator(".currio-converted").count();
+  try {
+    await page.waitForSelector("[data-currio-converted], .currio-converted", { timeout });
+  } catch {}
+  return countConversions(page);
 }
 
 // ============================================================
@@ -70,12 +83,12 @@ test.describe("Dynamic content", () => {
   test("converts dynamically inserted currency amounts", async ({ page }) => {
     await page.goto("/dynamic.html");
     await page.waitForTimeout(5000);
-    const initial = await page.locator(".currio-converted").count();
+    const initial = await countConversions(page);
 
     await page.click("#addBtn");
     await page.waitForTimeout(2000);
 
-    const updated = await page.locator(".currio-converted").count();
+    const updated = await countConversions(page);
     // $200 should trigger a new conversion if source ≠ target
     if (initial > 0) {
       expect(updated).toBeGreaterThan(initial);
@@ -86,13 +99,13 @@ test.describe("Dynamic content", () => {
   test("converts after SPA text update (characterData mutation)", async ({ page }) => {
     await page.goto("/spa-update.html");
     await page.waitForTimeout(5000);
-    const initial = await page.locator(".currio-converted").count();
+    const initial = await countConversions(page);
 
     // Click button that updates textContent in-place
     await page.click("#updateBtn");
     await page.waitForTimeout(2000);
 
-    const updated = await page.locator(".currio-converted").count();
+    const updated = await countConversions(page);
     // $150 (new value) should be re-scanned; $200 (unchanged) may also be converted
     expect(updated).toBeGreaterThanOrEqual(initial);
   });
@@ -103,7 +116,7 @@ test.describe("False positive prevention", () => {
   test("does not convert bare numbers without currency context", async ({ page }) => {
     await page.goto("/excluded.html");
     await page.waitForTimeout(5000);
-    const cnt = await page.locator(".currio-converted").count();
+    const cnt = await countConversions(page);
     expect(cnt).toBe(0);
   });
 
@@ -113,7 +126,7 @@ test.describe("False positive prevention", () => {
     const body = await page.textContent("body");
     expect(body).toContain("$100");
     expect(body).toContain("$50");
-    const cnt = await page.locator(".currio-converted").count();
+    const cnt = await countConversions(page);
     expect(cnt).toBe(0);
   });
 });
@@ -159,21 +172,24 @@ test.describe("Ambiguous $ handling", () => {
     await page.goto("/ambiguous.html");
     await page.waitForTimeout(5000);
 
-    const total = await page.locator(".currio-converted").count();
-    const ambig = await page.locator(".currio-ambiguous").count();
+    const total = await countConversions(page);
+    const dataAmbig = await page.locator("[data-currio-ambiguous]").count();
+    const spanAmbig = await page.locator(".currio-ambiguous").count();
+    const ambig = dataAmbig + spanAmbig;
 
-    // If source ≠ target, we get conversions + ambiguity
-    // If source = target, no conversions at all
     if (total > 0) {
       expect(ambig).toBeGreaterThanOrEqual(1);
-      const tip = await page.locator(".currio-ambiguous").first().getAttribute("data-tip");
+      // Check data-tip or data-currio-tip
+      const tip = dataAmbig > 0
+        ? await page.locator("[data-currio-ambiguous]").first().getAttribute("data-currio-tip")
+        : await page.locator(".currio-ambiguous").first().getAttribute("data-tip");
       expect(tip).toContain("USD");
     }
   });
 
   test("confirmed $ (en-US page) does not get ambiguous class", async ({ page }) => {
     await page.goto("/basic.html");
-    const cnt = await page.locator(".currio-ambiguous").count();
+    const cnt = await page.locator("[data-currio-ambiguous], .currio-ambiguous").count();
     expect(cnt).toBe(0);
   });
 
@@ -181,12 +197,15 @@ test.describe("Ambiguous $ handling", () => {
     await page.goto("/basic.html");
     const cnt = await waitForConversion(page);
     if (cnt > 0) {
-      const style = await page.locator(".currio-converted").first().evaluate(el => ({
-        borderStyle: window.getComputedStyle(el).borderTopStyle,
-        userSelect: window.getComputedStyle(el).userSelect,
-      }));
-      expect(style.borderStyle).toBe("dashed");
-      expect(style.userSelect).not.toBe("none");
+      // Check ::after pseudo-element for data-attribute annotation
+      const dataEl = page.locator("[data-currio-converted]").first();
+      const hasData = await dataEl.count() > 0;
+      if (hasData) {
+        const style = await dataEl.evaluate(el =>
+          window.getComputedStyle(el, "::after")
+        );
+        expect(style.borderTopStyle || style.borderBottomStyle).toBe("dashed");
+      }
     }
   });
 });

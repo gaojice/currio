@@ -54,6 +54,7 @@
         const parent = node.parentElement;
         if (!parent || SKIP_TAGS.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
         if (parent.closest(`.${CONVERTED_CLASS}`)) return NodeFilter.FILTER_REJECT;
+        if (parent.hasAttribute?.("data-currio-converted")) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -107,25 +108,30 @@
   }
 
   function applyElementLevelReplacement(ancestor, replacements) {
-    const fullText = ancestor.textContent;
-    const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
+    // Set data-attribute on ancestor (React-proof)
+    if (replacements.length === 1) {
+      const r = replacements[0];
+      ancestor.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
+      if (isSourceAmbiguous(r)) {
+        ancestor.setAttribute("data-currio-ambiguous", "true");
+        ancestor.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+      }
+      return;
+    }
 
+    // Multi-match fallback: insert spans
+    const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
     for (const r of sorted) {
       const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
-      if (!endNode) continue;
-
-      // Skip if already annotated
-      if (endNode.nextElementSibling?.classList?.contains(CONVERTED_CLASS)) continue;
+      if (!endNode || endNode.nextElementSibling?.classList?.contains(CONVERTED_CLASS)) continue;
 
       const span = document.createElement("span");
       span.className = CONVERTED_CLASS;
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
-
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
         span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
-
       endNode.after(span);
     }
   }
@@ -234,26 +240,35 @@
   // ---- Rendering ----
   function applyReplacements(textNode, replacements) {
     const parent = textNode.parentElement;
-    if (!parent) return;
+    if (!parent || parent.textContent.length > 200) return;
 
+    // Use data-attribute on parent + CSS ::after (React-proof)
+    // Only set if the parent contains exactly one price (single text node)
+    const childTextNodes = [...parent.childNodes].filter(n => n.nodeType === Node.TEXT_NODE);
+    if (childTextNodes.length === 1 && replacements.length === 1) {
+      const r = replacements[0];
+      parent.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
+      if (isSourceAmbiguous(r)) {
+        parent.setAttribute("data-currio-ambiguous", "true");
+        parent.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+      }
+      return;
+    }
+
+    // Fallback: splitText + span for multi-price text nodes
     const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
-
     for (const r of sorted) {
       textNode.splitText(r.offset + r.length);
       const afterNode = textNode.splitText(r.offset);
-
-      // Skip if already annotated (prevents double processing)
       if (afterNode.nextElementSibling?.classList?.contains(CONVERTED_CLASS)) continue;
 
       const span = document.createElement("span");
       span.className = CONVERTED_CLASS;
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
-
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
         span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
-
       afterNode.after(span);
     }
   }
@@ -353,6 +368,13 @@
   });
 
   function refreshExisting() {
+    // Clear data-attribute annotations
+    document.querySelectorAll("[data-currio-converted]").forEach(el => {
+      el.removeAttribute("data-currio-converted");
+      el.removeAttribute("data-currio-ambiguous");
+      el.removeAttribute("data-currio-tip");
+    });
+    // Clear span annotations
     document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => span.remove());
     processedNodes = new WeakSet();
     scanDocument(document.body);
