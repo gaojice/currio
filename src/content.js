@@ -320,17 +320,19 @@
         refreshExisting();
         break;
       case "SETTINGS_UPDATED":
-        settings = { ...settings, ...msg.settings };
-        if (!settings.autoEnabled || isBlacklisted()) break;
-        refreshExisting();
+        if (msg.settings?.targetCurrency && msg.settings.targetCurrency !== settings?.targetCurrency) {
+          location.reload();
+        } else {
+          settings = { ...settings, ...msg.settings };
+          if (!settings.autoEnabled || isBlacklisted()) break;
+          refreshExisting();
+        }
         break;
     }
   });
 
   function refreshExisting() {
-    document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => {
-      span.remove();
-    });
+    document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => span.remove());
     processedNodes = new WeakSet();
     scanDocument(document.body);
   }
