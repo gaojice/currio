@@ -4,8 +4,25 @@
   font-size: 0.9em;
 }
 
-/* Ambiguous $ assumed as USD — hover for detail */
+/* Ambiguous $ assumed as USD — instant CSS tooltip on hover */
 .currio-ambiguous {
+  position: relative;
   border-bottom: 1px dashed #f59e0b;
   cursor: help;
+}
+
+.currio-ambiguous:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f59e0b;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2147483647;
 }

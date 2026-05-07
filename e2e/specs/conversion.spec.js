@@ -138,7 +138,7 @@ test.describe("False positive prevention", () => {
 
 // ============================================================
 test.describe("Ambiguous $ handling", () => {
-  test("ambiguous $ gets dashed underline and title", async ({ page }) => {
+  test("ambiguous $ gets dashed underline and data-tip", async ({ page }) => {
     // No lang attribute → $ defaults to USD without locale confirmation
     await page.goto("/ambiguous.html");
     await waitForConversion(page);
@@ -147,8 +147,8 @@ test.describe("Ambiguous $ handling", () => {
     const cls = await el.getAttribute("class");
     expect(cls).toContain("currio-ambiguous");
 
-    const title = await el.getAttribute("title");
-    expect(title).toContain("USD");
+    const tip = await el.getAttribute("data-tip");
+    expect(tip).toContain("USD");
 
     const style = await el.evaluate(el => ({
       borderBottomStyle: window.getComputedStyle(el).borderBottomStyle,

@@ -180,7 +180,7 @@
 
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
-        span.title = "假定源货币为 USD";
+        span.setAttribute("data-tip", "假定源货币为 USD");
       }
 
       afterNode.after(span);
