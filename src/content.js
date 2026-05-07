@@ -188,11 +188,18 @@
   }
 
   function isSourceAmbiguous(r) {
-    return (
-      r.sourceCurrency === "USD" &&
-      CurrioUtils.CURRENCY_SYMBOL_MAP["$"]?.includes(r.sourceCurrency) &&
-      CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang] !== "USD"
-    );
+    if (r.sourceCurrency !== "USD") return false;
+    const localeCurrency = CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang];
+    // No locale hint at all → $ could be anything, mark as ambiguous
+    if (!localeCurrency) return true;
+    // Locale uses a different $ currency (e.g. en-CA → CAD)? Then ambiguous.
+    // But in practice this rarely fires because source inference picks up the
+    // locale currency first (source would be CAD, not USD).
+    const dollarCurrencies = CurrioUtils.CURRENCY_SYMBOL_MAP["$"];
+    if (dollarCurrencies.includes(localeCurrency) && localeCurrency !== "USD") return true;
+    // Locale currency doesn't use $ at all (e.g. zh-CN → CNY, fr-FR → EUR)
+    // → $ is clearly USD, not ambiguous
+    return false;
   }
 
   // ---- MutationObserver ----
