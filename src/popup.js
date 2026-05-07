@@ -1,5 +1,39 @@
 // Popup settings UI — changes take effect immediately
+const msg = (key, ...args) => chrome.i18n.getMessage(key, args);
+
+const CURRENCIES = [
+  { group: "currencyGroupAsia", items: [
+    ["TWD", "currency_twd"], ["CNY", "currency_cny"], ["JPY", "currency_jpy"],
+    ["KRW", "currency_krw"], ["HKD", "currency_hkd"], ["SGD", "currency_sgd"],
+  ]},
+  { group: "currencyGroupOther", items: [
+    ["USD", "currency_usd"], ["EUR", "currency_eur"], ["GBP", "currency_gbp"],
+    ["AUD", "currency_aud"], ["CAD", "currency_cad"],
+  ]},
+];
+
+function buildCurrencyOptions() {
+  const $target = document.getElementById("targetCurrency");
+  for (const g of CURRENCIES) {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = msg(g.group);
+    for (const [value, labelKey] of g.items) {
+      const opt = document.createElement("option");
+      opt.value = value;
+      opt.textContent = msg(labelKey);
+      optgroup.appendChild(opt);
+    }
+    $target.appendChild(optgroup);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  // Render i18n labels
+  document.getElementById("targetCurrencyLabel").textContent = msg("targetCurrency");
+  document.getElementById("autoEnabledLabel").textContent = msg("autoEnabled");
+  document.getElementById("currentSiteLabel").textContent = msg("currentSite");
+  buildCurrencyOptions();
+
   const [settings, tabs] = await Promise.all([
     chrome.runtime.sendMessage({ type: "GET_SETTINGS" }),
     chrome.tabs.query({ active: true, currentWindow: true }).catch(() => []),
@@ -7,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const tab = tabs[0];
   const hostname = tab ? new URL(tab.url).hostname.replace(/^www\./, "") : null;
-  const blacklist = settings.blacklist || [];
+  let blacklist = settings.blacklist || [];
 
   const $target = document.getElementById("targetCurrency");
   const $auto = document.getElementById("autoEnabled");
@@ -16,16 +50,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const $toggleBtn = document.getElementById("toggleDomainBtn");
   const $blacklistSummary = document.getElementById("blacklistSummary");
 
-  // Dynamic i18n strings
-  const msg = (key, ...args) => chrome.i18n.getMessage(key, args);
   $blacklist.placeholder = msg("blacklistPlaceholder");
   $blacklistSummary.textContent = msg("blacklistCount", String(blacklist.length));
 
   $target.value = settings.targetCurrency || "TWD";
   $auto.checked = settings.autoEnabled !== false;
   $blacklist.value = blacklist.join("\n");
-
-  let isBlacklisted = hostname && blacklist.some(b => hostname.includes(b));
 
   if (hostname) {
     $domainName.textContent = hostname;
@@ -34,10 +64,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("currentDomainBlock").style.display = "none";
   }
 
+  function getCurrentBlacklist() {
+    return $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean);
+  }
+
   function updateToggleBtn() {
-    isBlacklisted = $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean)
-      .some(b => hostname.includes(b));
-    if (isBlacklisted) {
+    const list = getCurrentBlacklist();
+    blacklist = list;
+    const inList = list.some(b => hostname.includes(b));
+    if (inList) {
       $toggleBtn.textContent = msg("removeFromBlacklist");
       $toggleBtn.className = "btn-small btn-remove";
       document.getElementById("currentDomainBlock").classList.add("blacklisted");
@@ -48,25 +83,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Auto-save on any change
   $target.addEventListener("change", save);
   $auto.addEventListener("change", save);
   $blacklist.addEventListener("blur", () => {
-    $blacklistSummary.textContent = msg("blacklistCount", String(
-      $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean).length
-    ));
+    $blacklistSummary.textContent = msg("blacklistCount", String(getCurrentBlacklist().length));
     updateToggleBtn();
     save();
   });
 
   $toggleBtn.addEventListener("click", () => {
-    let list = $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean);
+    let list = getCurrentBlacklist();
     const idx = list.findIndex(b => hostname.includes(b));
-    if (idx >= 0) {
-      list.splice(idx, 1);
-    } else {
-      list.push(hostname);
-    }
+    if (idx >= 0) list.splice(idx, 1);
+    else list.push(hostname);
     $blacklist.value = list.join("\n");
     $blacklistSummary.textContent = msg("blacklistCount", String(list.length));
     updateToggleBtn();
@@ -74,10 +103,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   async function save() {
+    blacklist = getCurrentBlacklist();
     const newSettings = {
       targetCurrency: $target.value,
       autoEnabled: $auto.checked,
-      blacklist: $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean),
+      blacklist,
     };
 
     await chrome.runtime.sendMessage({ type: "SET_SETTINGS", settings: newSettings });
