@@ -17,6 +17,8 @@ export const test = base.extend({
         `--disable-extensions-except=${EXT_PATH}`,
         `--load-extension=${EXT_PATH}`,
         "--window-size=200,150",
+        "--no-sandbox",
+        "--disable-gpu",
       ],
       headless: false,
     });

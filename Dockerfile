@@ -8,5 +8,9 @@ RUN npm ci
 
 COPY . .
 
-# xvfb provides virtual display for headed Chromium (extensions need it)
-ENTRYPOINT ["sh", "-c", "Xvfb :99 -screen 0 1280x720x24 &> /dev/null & sleep 1 && DISPLAY=:99 npx playwright test"]
+ENV DISPLAY=:99
+
+# xvfb virtual display + test run
+CMD Xvfb :99 -screen 0 1280x720x24 &> /dev/null & \
+    sleep 1 && \
+    npx playwright test
