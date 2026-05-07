@@ -36,8 +36,8 @@
     if (isBlacklisted()) return;
     if (!document.body) return;
 
-    scanDocument(document.body);
     startObserver();
+    scanDocument(document.body);
   }
 
   function isBlacklisted() {
