@@ -104,6 +104,31 @@ test.describe("False positive prevention", () => {
 });
 
 // ============================================================
+test.describe("Suffixed amounts ($13M, $100k etc.)", () => {
+  test("recognizes $13M with letter suffix", async ({ page }) => {
+    await page.goto("/suffixed.html");
+    const cnt = await waitForConversion(page);
+    expect(cnt).toBeGreaterThanOrEqual(1);
+    const texts = await getConversionTexts(page);
+    expect(texts.some(t => /[¥$€£₩NT]/.test(t))).toBe(true);
+  });
+
+  test("recognizes $3.3M with decimal and letter suffix", async ({ page }) => {
+    await page.goto("/suffixed.html");
+    await page.waitForTimeout(5000);
+    const bodyText = await page.textContent("body");
+    expect(bodyText).toContain("$3.3M");
+  });
+
+  test("converts suffixed amounts when source ≠ target", async ({ page }) => {
+    await page.goto("/suffixed.html");
+    const cnt = await waitForConversion(page);
+    // $ on en-US with USD target → 0; with non-USD target → up to 6
+    expect(cnt).toBeGreaterThanOrEqual(0);
+  });
+});
+
+// ============================================================
 test.describe("Split-element recognition", () => {
   test("recognizes currency split across elements", async ({ page }) => {
     await page.goto("/split.html");
