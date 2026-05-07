@@ -49,6 +49,11 @@ const MAX_FAILURES = 3;
 let failureCount = 0;
 let nextFetchTimer = null;
 
+// Restore badge on service worker start (not just install)
+chrome.storage.local.get("targetCurrency").then(s => {
+  if (s.targetCurrency) updateBadge(s.targetCurrency);
+});
+
 // ---- Install ----
 chrome.runtime.onInstalled.addListener(async () => {
   const { targetCurrency } = await chrome.storage.local.get("targetCurrency");
