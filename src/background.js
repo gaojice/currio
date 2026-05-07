@@ -1,5 +1,26 @@
 // Background service worker — rates, caching, messaging
 
+// Currency badge symbols and colors
+const CURRENCY_BADGE = {
+  USD: { text: "$",    color: "#059669" },
+  TWD: { text: "NT$",  color: "#2563eb" },
+  CNY: { text: "¥",    color: "#dc2626" },
+  JPY: { text: "¥",    color: "#d97706" },
+  EUR: { text: "€",    color: "#7c3aed" },
+  GBP: { text: "£",    color: "#4f46e5" },
+  KRW: { text: "₩",    color: "#0891b2" },
+  AUD: { text: "AU$",  color: "#65a30d" },
+  CAD: { text: "CA$",  color: "#9333ea" },
+  HKD: { text: "HK$",  color: "#ea580c" },
+  SGD: { text: "S$",   color: "#db2777" },
+};
+
+function updateBadge(currency) {
+  const badge = CURRENCY_BADGE[currency] || { text: currency, color: "#6366f1" };
+  chrome.action.setBadgeText({ text: badge.text });
+  chrome.action.setBadgeBackgroundColor({ color: badge.color });
+}
+
 // Inlined from utils.js — importScripts path resolution varies across Chrome versions
 const LOCALE_CURRENCY = {
   "zh-TW": "TWD", "zh-CN": "CNY", "zh-HK": "HKD", "zh-SG": "SGD",
@@ -39,6 +60,7 @@ chrome.runtime.onInstalled.addListener(async () => {
       blacklist: [],
     });
   }
+  updateBadge(targetCurrency || detected);
   scheduleNextFetch(0);
 });
 
@@ -61,6 +83,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     case "SET_SETTINGS":
       chrome.storage.local.set(msg.settings).then(() => {
         sendResponse({ ok: true });
+        if (msg.settings.targetCurrency) updateBadge(msg.settings.targetCurrency);
         broadcastSettings(msg.settings);
       });
       return true;
