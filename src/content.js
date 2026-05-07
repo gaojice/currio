@@ -59,24 +59,90 @@
     });
 
     const mutations = [];
+    const hasSymbol = /[$€£¥₩]/;
     let node;
     while ((node = walker.nextNode())) {
-      const replacements = processTextNode(node);
+      const replacements = processText(node.textContent, 0);
       if (replacements.length) {
         mutations.push({ node, replacements });
         processedNodes.add(node);
+      } else if (replacements.length === 0 && hasSymbol.test(node.textContent)) {
+        // $ alone in a text node — walk up to find an inline ancestor with combined text
+        const inlineTags = new Set(["SPAN", "A", "LABEL", "B", "STRONG", "EM", "I", "U", "SMALL", "MARK"]);
+        let ancestor = node.parentElement;
+        while (ancestor && inlineTags.has(ancestor.tagName) && ancestor.textContent.length <= 200) {
+          if (!processedNodes.has(ancestor)) {
+            const fullText = ancestor.textContent;
+            const parentMatches = processText(fullText, 0);
+            if (parentMatches.length) {
+              mutations.push({ node: ancestor, replacements: parentMatches, isElementLevel: true });
+              markDescendantTextNodes(ancestor);
+              processedNodes.add(ancestor);
+              break;
+            }
+          }
+          ancestor = ancestor.parentElement;
+        }
       }
     }
 
-    // Apply mutations in batch
-    for (const { node, replacements } of mutations) {
-      applyReplacements(node, replacements);
+    for (const { node, replacements, isElementLevel } of mutations) {
+      if (isElementLevel) {
+        applyElementLevelReplacement(node, replacements);
+      } else {
+        applyReplacements(node, replacements);
+      }
     }
   }
 
+  function findFirstTextNode(el) {
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    return w.nextNode();
+  }
+
+  function markDescendantTextNodes(el) {
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = w.nextNode())) {
+      processedNodes.add(n);
+    }
+  }
+
+  function applyElementLevelReplacement(ancestor, replacements) {
+    const fullText = ancestor.textContent;
+    const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
+
+    for (const r of sorted) {
+      const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
+      if (!endNode) continue;
+
+      const span = document.createElement("span");
+      span.className = CONVERTED_CLASS;
+      span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
+
+      if (isSourceAmbiguous(r)) {
+        span.classList.add("currio-ambiguous");
+        span.setAttribute("data-tip", "假定源货币为 USD");
+      }
+
+      endNode.after(span);
+    }
+  }
+
+  function textNodeAtOffset(el, targetOffset) {
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let n, pos = 0;
+    while ((n = w.nextNode())) {
+      const len = n.textContent.length;
+      if (pos + len >= targetOffset) return n;
+      pos += len;
+    }
+    return null;
+  }
+
   // ---- Currency Recognition ----
-  function processTextNode(node) {
-    const text = node.textContent;
+  function processTextNode(node) { return processText(node.textContent, 0); }
+  function processText(text, offset) {
     const matches = [];
 
     // Pattern 1: Symbol prefix  $100

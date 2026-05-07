@@ -137,6 +137,20 @@ test.describe("False positive prevention", () => {
 });
 
 // ============================================================
+test.describe("Split-element currency recognition", () => {
+  test("recognizes $499 when $ and number are in separate spans", async ({ page }) => {
+    await page.goto("/split.html");
+    const cnt = await waitForConversion(page);
+    expect(cnt).toBeGreaterThanOrEqual(2);
+
+    const texts = await getConversionTexts(page);
+    texts.forEach(t => {
+      expect(t).toMatch(/[¥$€£₩NT]/);
+    });
+  });
+});
+
+// ============================================================
 test.describe("Ambiguous $ handling", () => {
   test("ambiguous $ gets yellow dashed border and data-tip", async ({ page }) => {
     // No lang attribute → $ defaults to USD without locale confirmation
