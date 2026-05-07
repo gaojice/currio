@@ -167,34 +167,32 @@
     const parent = textNode.parentElement;
     if (!parent) return;
 
-    // Apply from end to start so earlier offsets remain valid
     const sorted = [...replacements].sort((a, b) => b.offset - a.offset);
 
     for (const r of sorted) {
-      // Split at end of match → [textBefore+match, textAfter]
       textNode.splitText(r.offset + r.length);
-      // Split at start of match → matchNode = [offset, offset+length)
       const matchNode = textNode.splitText(r.offset);
 
-      // Wrap matchNode in a span with tooltip
       const wrapper = document.createElement("span");
       wrapper.className = AMOUNT_CLASS;
-      wrapper.title = buildTooltip(r);
+      wrapper.title = `≈ ${CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency)}`;
+
+      if (isSourceAmbiguous(r)) {
+        wrapper.classList.add("currio-ambiguous");
+        wrapper.title += "\n（假定源货币为 USD）";
+      }
+
       parent.replaceChild(wrapper, matchNode);
       wrapper.appendChild(matchNode);
     }
   }
 
-  function buildTooltip(r) {
-    const converted = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
-    const sourceIsAmbiguous =
+  function isSourceAmbiguous(r) {
+    return (
       r.sourceCurrency === "USD" &&
       CurrioUtils.CURRENCY_SYMBOL_MAP["$"]?.includes(r.sourceCurrency) &&
-      CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang] !== "USD";
-
-    return sourceIsAmbiguous
-      ? `≈ ${converted}（按 USD）`
-      : `≈ ${converted}`;
+      CurrioUtils.LOCALE_CURRENCY[document.documentElement.lang] !== "USD"
+    );
   }
 
   // ---- MutationObserver ----

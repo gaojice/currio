@@ -3,3 +3,9 @@
   border-bottom: 1px dotted #6b7280;
   cursor: help;
 }
+
+/* Ambiguous: $ assumed as USD without locale confirmation */
+.currio-ambiguous {
+  border-bottom-style: dashed;
+  border-bottom-color: #f59e0b;
+}

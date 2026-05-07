@@ -141,18 +141,25 @@ test.describe("False positive prevention", () => {
 
 // ============================================================
 test.describe("Hover tooltip style", () => {
-  test("amount wrapper has dotted underline", async ({ page }) => {
+  test("tooltip contains approximate symbol", async ({ page }) => {
+    await page.goto("/basic.html");
+    await waitForConversion(page, 1);
+
+    const title = await page.locator(".currio-amount").first().getAttribute("title");
+    expect(title).toMatch(/≈/);
+  });
+
+  test("wrapper has dotted underline", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
 
     const bb = await page.locator(".currio-amount").first().evaluate(el =>
       window.getComputedStyle(el).borderBottomStyle
     );
-    // Should have a border-bottom (dotted)
-    expect(bb).not.toBe("none");
+    expect(bb).toBe("dotted");
   });
 
-  test("amount wrapper has help cursor", async ({ page }) => {
+  test("wrapper has help cursor", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
 
@@ -162,13 +169,28 @@ test.describe("Hover tooltip style", () => {
     expect(cursor).toBe("help");
   });
 
-  test("amount text does not show inline conversion", async ({ page }) => {
+  test("amount text only shows original, no inline conversion", async ({ page }) => {
     await page.goto("/basic.html");
     await waitForConversion(page, 1);
 
-    // The wrapper span should only contain the original amount text
-    // not the "(≈ ...)" annotation
     const text = await page.locator(".currio-amount").first().textContent();
     expect(text).not.toMatch(/≈/);
+  });
+
+  test("ambiguous $ gets dashed orange underline", async ({ page }) => {
+    // ambiguous.html has no lang attribute → $ defaults to USD without locale confirmation
+    await page.goto("/ambiguous.html");
+    await waitForConversion(page, 1);
+
+    const cls = await page.locator(".currio-amount").first().getAttribute("class");
+    expect(cls).toContain("currio-ambiguous");
+
+    const style = await page.locator(".currio-amount").first().evaluate(el => ({
+      borderBottomStyle: window.getComputedStyle(el).borderBottomStyle,
+      borderBottomColor: window.getComputedStyle(el).borderBottomColor,
+    }));
+    expect(style.borderBottomStyle).toBe("dashed");
+    // Color should be orange-ish (rgb)
+    expect(style.borderBottomColor).toMatch(/rgb\(245|rgb\(246/);
   });
 });
