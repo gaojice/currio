@@ -5,6 +5,8 @@ var CurrioUtils = (() => {
     "€": ["EUR"],
     "£": ["GBP"],
     "¥": ["JPY", "CNY"],
+    "￥": ["CNY"],  // full-width yen (Chinese)
+    "元": ["CNY"],  // Chinese yuan character
     "₩": ["KRW"],
   };
 
