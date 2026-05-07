@@ -10,40 +10,40 @@
     <h1 class="title">Currio</h1>
 
     <label class="field">
-      <span>目标货币</span>
+      <span>__MSG_targetCurrency__</span>
       <select id="targetCurrency">
-        <optgroup label="亚洲">
-          <option value="TWD">TWD 新台币</option>
-          <option value="CNY">CNY 人民币</option>
-          <option value="JPY">JPY 日元</option>
-          <option value="KRW">KRW 韩元</option>
-          <option value="HKD">HKD 港币</option>
-          <option value="SGD">SGD 新加坡元</option>
+        <optgroup data-i18n="currencyGroupAsia">
+          <option value="TWD">__MSG_currency_twd__</option>
+          <option value="CNY">__MSG_currency_cny__</option>
+          <option value="JPY">__MSG_currency_jpy__</option>
+          <option value="KRW">__MSG_currency_krw__</option>
+          <option value="HKD">__MSG_currency_hkd__</option>
+          <option value="SGD">__MSG_currency_sgd__</option>
         </optgroup>
-        <optgroup label="其他">
-          <option value="USD">USD 美元</option>
-          <option value="EUR">EUR 欧元</option>
-          <option value="GBP">GBP 英镑</option>
-          <option value="AUD">AUD 澳元</option>
-          <option value="CAD">CAD 加元</option>
+        <optgroup data-i18n="currencyGroupOther">
+          <option value="USD">__MSG_currency_usd__</option>
+          <option value="EUR">__MSG_currency_eur__</option>
+          <option value="GBP">__MSG_currency_gbp__</option>
+          <option value="AUD">__MSG_currency_aud__</option>
+          <option value="CAD">__MSG_currency_cad__</option>
         </optgroup>
       </select>
     </label>
 
     <label class="field checkbox-field">
       <input type="checkbox" id="autoEnabled">
-      <span>自动启用</span>
+      <span>__MSG_autoEnabled__</span>
     </label>
 
     <div class="blacklist-section">
       <div class="current-domain" id="currentDomainBlock">
-        <span class="domain-label">当前网站</span>
+        <span class="domain-label">__MSG_currentSite__</span>
         <span class="domain-name" id="currentDomainName">—</span>
         <button id="toggleDomainBtn" class="btn-small"></button>
       </div>
       <details id="blacklistDetails">
-        <summary>黑名单（<span id="blacklistCount">0</span> 个）</summary>
-        <textarea id="blacklist" rows="4" placeholder="example.com&#10;bank.com"></textarea>
+        <summary id="blacklistSummary"></summary>
+        <textarea id="blacklist" rows="4" data-i18n-placeholder="blacklistPlaceholder"></textarea>
       </details>
     </div>
 

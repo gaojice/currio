@@ -121,7 +121,7 @@
 
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
-        span.setAttribute("data-tip", "假定源货币为 USD");
+        span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
 
       endNode.after(span);
@@ -247,7 +247,7 @@
 
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
-        span.setAttribute("data-tip", "假定源货币为 USD");
+        span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
 
       afterNode.after(span);

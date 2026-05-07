@@ -14,54 +14,61 @@ document.addEventListener("DOMContentLoaded", async () => {
   const $blacklist = document.getElementById("blacklist");
   const $domainName = document.getElementById("currentDomainName");
   const $toggleBtn = document.getElementById("toggleDomainBtn");
-  const $blacklistCount = document.getElementById("blacklistCount");
-  const $domainBlock = document.getElementById("currentDomainBlock");
+  const $blacklistSummary = document.getElementById("blacklistSummary");
+
+  // Dynamic i18n strings
+  const msg = (key, ...args) => chrome.i18n.getMessage(key, args);
+  $blacklist.placeholder = msg("blacklistPlaceholder");
+  $blacklistSummary.textContent = msg("blacklistCount", String(blacklist.length));
 
   $target.value = settings.targetCurrency || "TWD";
   $auto.checked = settings.autoEnabled !== false;
   $blacklist.value = blacklist.join("\n");
-  $blacklistCount.textContent = blacklist.length;
+
+  let isBlacklisted = hostname && blacklist.some(b => hostname.includes(b));
 
   if (hostname) {
     $domainName.textContent = hostname;
     updateToggleBtn();
   } else {
-    $domainBlock.style.display = "none";
+    document.getElementById("currentDomainBlock").style.display = "none";
   }
 
   function updateToggleBtn() {
-    const inList = blacklist.some(b => hostname.includes(b));
-    if (inList) {
-      $toggleBtn.textContent = "移出黑名单";
+    isBlacklisted = $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean)
+      .some(b => hostname.includes(b));
+    if (isBlacklisted) {
+      $toggleBtn.textContent = msg("removeFromBlacklist");
       $toggleBtn.className = "btn-small btn-remove";
-      $domainBlock.classList.add("blacklisted");
+      document.getElementById("currentDomainBlock").classList.add("blacklisted");
     } else {
-      $toggleBtn.textContent = "加入黑名单";
+      $toggleBtn.textContent = msg("addToBlacklist");
       $toggleBtn.className = "btn-small btn-add";
-      $domainBlock.classList.remove("blacklisted");
+      document.getElementById("currentDomainBlock").classList.remove("blacklisted");
     }
   }
 
   // Auto-save on any change
   $target.addEventListener("change", save);
   $auto.addEventListener("change", save);
-  $blacklist.addEventListener("blur", save);
+  $blacklist.addEventListener("blur", () => {
+    $blacklistSummary.textContent = msg("blacklistCount", String(
+      $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean).length
+    ));
+    updateToggleBtn();
+    save();
+  });
 
   $toggleBtn.addEventListener("click", () => {
-    let list = $blacklist.value
-      .split("\n")
-      .map(s => s.trim())
-      .filter(Boolean);
-
+    let list = $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean);
     const idx = list.findIndex(b => hostname.includes(b));
     if (idx >= 0) {
       list.splice(idx, 1);
     } else {
       list.push(hostname);
     }
-
     $blacklist.value = list.join("\n");
-    $blacklistCount.textContent = list.length;
+    $blacklistSummary.textContent = msg("blacklistCount", String(list.length));
     updateToggleBtn();
     save();
   });
@@ -70,16 +77,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const newSettings = {
       targetCurrency: $target.value,
       autoEnabled: $auto.checked,
-      blacklist: $blacklist.value
-        .split("\n")
-        .map(s => s.trim())
-        .filter(Boolean),
+      blacklist: $blacklist.value.split("\n").map(s => s.trim()).filter(Boolean),
     };
 
-    await chrome.runtime.sendMessage({
-      type: "SET_SETTINGS",
-      settings: newSettings,
-    });
+    await chrome.runtime.sendMessage({ type: "SET_SETTINGS", settings: newSettings });
 
     if (tab?.id) {
       chrome.tabs.sendMessage(tab.id, {
