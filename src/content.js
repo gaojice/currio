@@ -16,7 +16,6 @@
   const processedNodes = new WeakSet();
   let rates = null;
   let settings = null;
-  let scanScheduled = false;
   let lastScanTime = 0;
   let observer = null;
 
@@ -279,13 +278,12 @@
     if (observer) return;
     let pendingNodes = [];
     const seenNodes = new WeakSet();
+    let scanTimer = null;
 
     observer = new MutationObserver(mutations => {
       for (const m of mutations) {
         if (m.type === "characterData") {
-          // Only react to text changes that contain currency symbols
           if (!hasSymbol.test(m.target.textContent)) continue;
-          // Allow re-scanning this text node (price changed in-place)
           processedNodes.delete(m.target);
           const parent = m.target.parentElement;
           if (parent && !SKIP_TAGS.has(parent.tagName) && !parent.closest(`.${CONVERTED_CLASS}`)) {
@@ -306,18 +304,16 @@
         }
       }
 
-      if (scanScheduled || pendingNodes.length === 0) return;
-      scheduleScan();
-    });
+      if (pendingNodes.length === 0) return;
 
-    function scheduleScan() {
-      scanScheduled = true;
-      const delay = Date.now() - lastScanTime < THROTTLE_MS
-        ? THROTTLE_MS - (Date.now() - lastScanTime)
+      // Reset debounce timer on each new mutation — only scan after settling
+      clearTimeout(scanTimer);
+      const now = Date.now();
+      const delay = (now - lastScanTime < THROTTLE_MS)
+        ? Math.max(THROTTLE_MS - (now - lastScanTime), DEBOUNCE_MS)
         : DEBOUNCE_MS;
 
-      setTimeout(() => {
-        scanScheduled = false;
+      scanTimer = setTimeout(() => {
         lastScanTime = Date.now();
         const nodes = pendingNodes;
         pendingNodes = [];
@@ -328,7 +324,7 @@
           }
         }
       }, delay);
-    }
+    });
 
     observer.observe(document.body, {
       childList: true,
