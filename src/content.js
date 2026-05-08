@@ -138,7 +138,7 @@
       target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
       if (isSourceAmbiguous(r)) {
         target.setAttribute("data-currio-ambiguous", "true");
-        target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        target.setAttribute("data-currio-tip", (chrome.i18n?.getMessage("sourceAssumedUSD") || "假定源货币为 USD"));
       }
       return;
     }
@@ -154,7 +154,7 @@
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
-        span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        span.setAttribute("data-tip", (chrome.i18n?.getMessage("sourceAssumedUSD") || "假定源货币为 USD"));
       }
       endNode.after(span);
     }
@@ -284,7 +284,7 @@
       parent.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
       if (isSourceAmbiguous(r)) {
         parent.setAttribute("data-currio-ambiguous", "true");
-        parent.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        parent.setAttribute("data-currio-tip", (chrome.i18n?.getMessage("sourceAssumedUSD") || "假定源货币为 USD"));
       }
       return;
     }
@@ -301,7 +301,7 @@
       span.textContent = CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency);
       if (isSourceAmbiguous(r)) {
         span.classList.add("currio-ambiguous");
-        span.setAttribute("data-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        span.setAttribute("data-tip", (chrome.i18n?.getMessage("sourceAssumedUSD") || "假定源货币为 USD"));
       }
       afterNode.after(span);
     }

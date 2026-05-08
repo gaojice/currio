@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-05-08T05:51:22.360Z",
   "lifetime": {
-    "total_tokens_estimated": 8824,
-    "total_reads": 2,
-    "total_writes": 5,
+    "total_tokens_estimated": 13915,
+    "total_reads": 4,
+    "total_writes": 10,
     "total_sessions": 1,
-    "anatomy_hits": 2,
+    "anatomy_hits": 4,
     "anatomy_misses": 0,
-    "repeated_reads_blocked": 16,
-    "estimated_savings_vs_bare_cli": 67184
+    "repeated_reads_blocked": 24,
+    "estimated_savings_vs_bare_cli": 100976
   },
   "sessions": [
     {
@@ -81,6 +81,60 @@
         "writes_count": 3,
         "repeated_reads_blocked": 8,
         "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T06:09:16.547Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4174,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4576,
+        "output_tokens_estimated": 515,
+        "reads_count": 2,
+        "writes_count": 5,
+        "repeated_reads_blocked": 8,
+        "anatomy_lookups": 2
       }
     }
   ],
