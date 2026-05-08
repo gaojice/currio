@@ -38,3 +38,5 @@
 | 17:05 | Session end: 17 writes across 5 files (content.js, conversion.spec.js, content.css, taobao-detail.html, semi-button.html) | 2 reads | ~6527 tok |
 | 17:08 | Edited src/content.js | added 1 condition(s) | ~153 |
 | 17:10 | Edited src/content.js | 1→2 lines | ~30 |
+| 17:19 | Edited src/content.js | added 1 condition(s) | ~78 |
+| 17:21 | Edited src/content.js | 6→5 lines | ~43 |

@@ -395,6 +395,12 @@
       attributes: true,
       attributeFilter: ["data-currio-converted"],
     });
+
+    // Safety net: periodic re-scan for React SPAs (every 3s)
+    setInterval(() => {
+      if (!rates) return;
+      refreshExisting();
+    }, 3000);
   }
 
   // ---- Listen for updates from background ----
