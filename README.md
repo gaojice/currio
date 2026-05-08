@@ -94,3 +94,9 @@ MIT
     Built with vanilla JS · Manifest V3 · exchange rates from <a href="https://exchangerate-api.com">ExchangeRate-API</a>
   </sub>
 </div>
+
+## Support
+
+If you find Currio useful, consider buying me a coffee ☕
+
+<img src="assets/support.jpg" width="200" alt="Support QR Code">
