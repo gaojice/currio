@@ -67,20 +67,15 @@
         mutations.push({ node, replacements });
         processedNodes.add(node);
       } else if (replacements.length === 0 && hasSymbol.test(node.textContent)) {
-        // Symbol alone in a text node — walk up ancestors to find combined text
-        let ancestor = node.parentElement;
-        while (ancestor && ancestor.textContent.length <= 200) {
-          if (!processedNodes.has(ancestor)) {
-            const fullText = ancestor.textContent;
-            const parentMatches = processText(fullText, 0);
-            if (parentMatches.length) {
-              mutations.push({ node: ancestor, replacements: parentMatches, isElementLevel: true });
-              markDescendantTextNodes(ancestor);
-              processedNodes.add(ancestor);
-              break;
-            }
+        // Symbol alone — collect only contiguous price-related text nodes
+        const priceText = collectPriceText(node);
+        if (priceText) {
+          const parentMatches = processText(priceText, 0);
+          if (parentMatches.length) {
+            mutations.push({ node: node.parentElement, replacements: parentMatches, isElementLevel: true });
+            markDescendantTextNodes(node.parentElement);
+            processedNodes.add(node.parentElement);
           }
-          ancestor = ancestor.parentElement;
         }
       }
     }
@@ -92,6 +87,23 @@
         applyReplacements(node, replacements);
       }
     }
+  }
+
+  function collectPriceText(startTextNode) {
+    // Collect contiguous text: the symbol node + immediately following numeric-only nodes
+    const numOnly = /^[\d,.]*$/;
+    let text = startTextNode.textContent;
+    let sibling = startTextNode.parentElement?.nextElementSibling;
+    while (sibling) {
+      const t = sibling.textContent.trim();
+      if (t && numOnly.test(t)) {
+        text += t;
+        sibling = sibling.nextElementSibling;
+      } else {
+        break;
+      }
+    }
+    return text.length > 1 ? text : null; // must have symbol + at least 1 digit
   }
 
   function findFirstTextNode(el) {
@@ -110,19 +122,21 @@
   function applyElementLevelReplacement(ancestor, replacements) {
     if (replacements.length === 1) {
       const r = replacements[0];
-      // Re-compute conversion using only the text content before the first non-price text
-      const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
-      if (!endNode) return;
+      // Find the last numeric-only sibling in the price chain
+      let target = ancestor;
+      let sib = ancestor.nextElementSibling;
+      while (sib) {
+        const t = sib.textContent.trim();
+        if (t && /^[\d,.]*$/.test(t)) {
+          target = sib;
+          sib = sib.nextElementSibling;
+        } else {
+          break;
+        }
+      }
 
-      const target = endNode.parentElement;
-      // Re-match with only text up to endNode (exclude sibling non-price digits)
-      const limitedText = getTextUpToNode(ancestor, endNode);
-      const limitedMatches = processText(limitedText, 0);
-      const limited = limitedMatches[limitedMatches.length - 1]; // last match = closest to endNode
-
-      if (limited) {
-        target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(limited.convertedAmount, settings.targetCurrency));
-        if (isSourceAmbiguous(limited)) {
+      target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
+      if (isSourceAmbiguous(r)) {
           target.setAttribute("data-currio-ambiguous", "true");
           target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
         }
