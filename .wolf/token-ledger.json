@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-05-08T05:51:22.360Z",
   "lifetime": {
-    "total_tokens_estimated": 19021,
-    "total_reads": 6,
-    "total_writes": 16,
+    "total_tokens_estimated": 24556,
+    "total_reads": 8,
+    "total_writes": 24,
     "total_sessions": 1,
-    "anatomy_hits": 6,
+    "anatomy_hits": 8,
     "anatomy_misses": 0,
-    "repeated_reads_blocked": 33,
-    "estimated_savings_vs_bare_cli": 138915
+    "repeated_reads_blocked": 42,
+    "estimated_savings_vs_bare_cli": 176854
   },
   "sessions": [
     {
@@ -192,6 +192,75 @@
         "output_tokens_estimated": 533,
         "reads_count": 2,
         "writes_count": 6,
+        "repeated_reads_blocked": 9,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T07:02:04.969Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4171,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+          "tokens_estimated": 171,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 258,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4573,
+        "output_tokens_estimated": 962,
+        "reads_count": 2,
+        "writes_count": 8,
         "repeated_reads_blocked": 9,
         "anatomy_lookups": 2
       }

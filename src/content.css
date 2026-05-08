@@ -4,6 +4,7 @@
   display: inline-block;
   color: #6b7280;
   font-size: 0.75em;
+  line-height: 1.4;
   border: 1px dashed #9ca3af;
   border-radius: 3px;
   padding: 0 4px;
@@ -37,6 +38,7 @@
   display: inline-block;
   color: #6b7280;
   font-size: 0.75em;
+  line-height: 1.4;
   border: 1px dashed #9ca3af;
   border-radius: 3px;
   padding: 0 4px;
