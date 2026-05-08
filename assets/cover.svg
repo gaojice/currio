@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="converted" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="0.7" y2="0">
+      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect fill="url(#bg)" width="1200" height="630"/>
+  <rect fill="url(#glow)" width="1200" height="630"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03" stroke="#fff" stroke-width="0.5">
+    <line x1="0" y1="0" x2="1200" y2="0"/>
+    <line x1="0" y1="45" x2="1200" y2="45"/>
+    <line x1="0" y1="90" x2="1200" y2="90"/>
+    <line x1="0" y1="135" x2="1200" y2="135"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="225" x2="1200" y2="225"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="405" x2="1200" y2="405"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="495" x2="1200" y2="495"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="0" y1="585" x2="1200" y2="585"/>
+    <line x1="0" y1="630" x2="1200" y2="630"/>
+  </g>
+  <g opacity="0.03" stroke="#fff" stroke-width="0.5">
+    <line x1="0" y1="0" x2="0" y2="630"/>
+    <line x1="60" y1="0" x2="60" y2="630"/>
+    <line x1="120" y1="0" x2="120" y2="630"/>
+    <line x1="180" y1="0" x2="180" y2="630"/>
+    <line x1="240" y1="0" x2="240" y2="630"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="360" y1="0" x2="360" y2="630"/>
+    <line x1="420" y1="0" x2="420" y2="630"/>
+    <line x1="480" y1="0" x2="480" y2="630"/>
+    <line x1="540" y1="0" x2="540" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="660" y1="0" x2="660" y2="630"/>
+    <line x1="720" y1="0" x2="720" y2="630"/>
+    <line x1="780" y1="0" x2="780" y2="630"/>
+    <line x1="840" y1="0" x2="840" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="960" y1="0" x2="960" y2="630"/>
+    <line x1="1020" y1="0" x2="1020" y2="630"/>
+    <line x1="1080" y1="0" x2="1080" y2="630"/>
+    <line x1="1140" y1="0" x2="1140" y2="630"/>
+  </g>
+
+  <!-- Decorative circles -->
+  <circle cx="1050" cy="150" r="280" fill="none" stroke="#6366f1" stroke-width="0.5" opacity="0.08"/>
+  <circle cx="1050" cy="150" r="220" fill="none" stroke="#818cf8" stroke-width="0.5" opacity="0.06"/>
+  <circle cx="200" cy="500" r="180" fill="none" stroke="#a855f7" stroke-width="0.5" opacity="0.06"/>
+
+  <!-- Tagline -->
+  <text x="80" y="165" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#94a3b8" font-weight="400" letter-spacing="1">
+    Chrome Extension
+  </text>
+
+  <!-- Title: Currio -->
+  <text x="78" y="227" font-family="system-ui, -apple-system, sans-serif" font-size="72" fill="#f1f5f9" font-weight="700" letter-spacing="-0.5">
+    Currio
+  </text>
+
+  <!-- Subtitle -->
+  <text x="78" y="275" font-family="system-ui, -apple-system, sans-serif" font-size="26" fill="#64748b" font-weight="400" letter-spacing="0.3">
+    网页货币自动转换 · Auto Currency Converter
+  </text>
+
+  <!-- Decorative line -->
+  <rect x="78" y="300" width="120" height="3" rx="1.5" fill="url(#line)"/>
+
+  <!-- Demo card: original price -->
+  <g transform="translate(80, 360)">
+    <rect x="0" y="0" width="340" height="70" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="24" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#94a3b8" font-weight="400">
+      Amazon.com · 商品价格
+    </text>
+    <text x="24" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#f1f5f9" font-weight="600">
+      $1,299<text font-size="14" fill="#64748b">.00</text>
+    </text>
+  </g>
+
+  <!-- Arrow -->
+  <g transform="translate(460, 360)" filter="url(#softGlow)">
+    <text x="0" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#818cf8" font-weight="300">→</text>
+    <text x="25" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#6366f1" font-weight="500">自动转换</text>
+  </g>
+
+  <!-- Demo card: converted price -->
+  <g transform="translate(620, 360)">
+    <rect x="0" y="0" width="340" height="70" rx="12" fill="#0f2a1f" stroke="#34d399" stroke-width="1.5"/>
+    <text x="24" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#6ee7b7" font-weight="400">
+      查看到手价（网页内直接显示）
+    </text>
+    <text x="24" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#34d399" font-weight="600">
+      ≈ NT$41,568<text font-size="14" fill="#10b981">.00</text>
+    </text>
+  </g>
+
+  <!-- Feature pills -->
+  <g transform="translate(80, 490)">
+    <rect x="0" y="0" width="130" height="32" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="26" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">自动识别</text>
+  </g>
+  <g transform="translate(225, 490)">
+    <rect x="0" y="0" width="130" height="32" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="26" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">实时汇率</text>
+  </g>
+  <g transform="translate(370, 490)">
+    <rect x="0" y="0" width="130" height="32" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="26" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">零配置</text>
+  </g>
+  <g transform="translate(515, 490)">
+    <rect x="0" y="0" width="130" height="32" rx="16" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="26" y="21" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">智能推断</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="80" y="590" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">支持 USD · TWD · CNY · JPY · EUR · GBP · KRW · AUD · CAD · HKD · SGD</text>
+
+  <!-- Extension icon mockup in corner -->
+  <g transform="translate(880, 100)">
+    <rect x="0" y="0" width="64" height="64" rx="16" fill="#6366f1"/>
+    <text x="16" y="43" font-family="system-ui, sans-serif" font-size="30" fill="#fff" font-weight="700">$</text>
+    <!-- Badge -->
+    <rect x="36" y="0" width="28" height="20" rx="6" fill="#dc2626"/>
+    <text x="42" y="14" font-family="system-ui, sans-serif" font-size="11" fill="#fff" font-weight="700">¥</text>
+  </g>
+  <text x="880" y="184" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b" font-weight="400">扩展图标实时显示</text>
+  <text x="880" y="204" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b" font-weight="400">目标货币符号</text>
+
+  <!-- Supported currencies -->
+  <g transform="translate(880, 260)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">源货币智能推断</text>
+    <rect x="0" y="16" width="260" height="1" rx="0.5" fill="#334155"/>
+    <text x="0" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b"><tspan fill="#a78bfa">$</tspan> → USD · CAD · AUD · HKD · SGD · TWD</text>
+    <text x="0" y="62" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b"><tspan fill="#a78bfa">¥</tspan> → JPY · CNY</text>
+    <text x="0" y="84" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#64748b"><tspan fill="#a78bfa">€</tspan> → EUR · <tspan fill="#a78bfa">£</tspan> → GBP · <tspan fill="#a78bfa">₩</tspan> → KRW</text>
+  </g>
+</svg>
