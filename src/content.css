@@ -2,12 +2,13 @@
 [data-currio-converted]::after {
   content: " " attr(data-currio-converted);
   display: inline-block;
+  vertical-align: baseline;
   color: #6b7280;
   font-size: 0.75em;
-  line-height: 1.4;
+  line-height: 1;
   border: 1px dashed #9ca3af;
   border-radius: 3px;
-  padding: 0 4px;
+  padding: 1px 4px;
   margin-left: 3px;
   white-space: nowrap;
 }

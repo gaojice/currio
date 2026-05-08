@@ -331,7 +331,15 @@
 
     observer = new MutationObserver(mutations => {
       for (const m of mutations) {
-        if (m.type === "characterData") {
+        if (m.type === "attributes") {
+          // React removed our data attribute — re-scan this element
+          if (!m.target.hasAttribute("data-currio-converted")) {
+            if (!seenNodes.has(m.target)) {
+              seenNodes.add(m.target);
+              pendingNodes.push(m.target);
+            }
+          }
+        } else if (m.type === "characterData") {
           if (!hasSymbol.test(m.target.textContent)) continue;
           processedNodes.delete(m.target);
           const parent = m.target.parentElement;
@@ -379,6 +387,8 @@
       childList: true,
       subtree: true,
       characterData: true,
+      attributes: true,
+      attributeFilter: ["data-currio-converted"],
     });
   }
 

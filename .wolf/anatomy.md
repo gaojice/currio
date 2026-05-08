@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T07:02:36.236Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T07:06:06.799Z
 > Files: 43 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -71,8 +71,8 @@
 ## src/
 
 - `background.js` — Background service worker — rates, caching, messaging (~1460 tok)
-- `content.css` — Styles: 3 rules (~427 tok)
-- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4193 tok)
+- `content.css` — Styles: 3 rules (~435 tok)
+- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4309 tok)
 - `popup.css` — Styles: 21 rules (~750 tok)
 - `popup.html` — Currio (~299 tok)
 - `popup.js` — Popup settings UI — changes take effect immediately (~1231 tok)
