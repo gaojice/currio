@@ -2,28 +2,19 @@
 const msg = (key, ...args) => chrome.i18n.getMessage(key, args);
 
 const CURRENCIES = [
-  { group: "currencyGroupAsia", items: [
-    ["TWD", "currency_twd"], ["CNY", "currency_cny"], ["JPY", "currency_jpy"],
-    ["KRW", "currency_krw"], ["HKD", "currency_hkd"], ["SGD", "currency_sgd"],
-  ]},
-  { group: "currencyGroupOther", items: [
-    ["USD", "currency_usd"], ["EUR", "currency_eur"], ["GBP", "currency_gbp"],
-    ["AUD", "currency_aud"], ["CAD", "currency_cad"],
-  ]},
+  ["AUD", "currency_aud"], ["CAD", "currency_cad"], ["CNY", "currency_cny"],
+  ["EUR", "currency_eur"], ["GBP", "currency_gbp"], ["HKD", "currency_hkd"],
+  ["JPY", "currency_jpy"], ["KRW", "currency_krw"], ["SGD", "currency_sgd"],
+  ["TWD", "currency_twd"], ["USD", "currency_usd"],
 ];
 
 function buildCurrencyOptions() {
   const $target = document.getElementById("targetCurrency");
-  for (const g of CURRENCIES) {
-    const optgroup = document.createElement("optgroup");
-    optgroup.label = msg(g.group);
-    for (const [value, labelKey] of g.items) {
-      const opt = document.createElement("option");
-      opt.value = value;
-      opt.textContent = msg(labelKey);
-      optgroup.appendChild(opt);
-    }
-    $target.appendChild(optgroup);
+  for (const [value, labelKey] of CURRENCIES) {
+    const opt = document.createElement("option");
+    opt.value = value;
+    opt.textContent = msg(labelKey);
+    $target.appendChild(opt);
   }
 }
 

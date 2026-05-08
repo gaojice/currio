@@ -72,3 +72,7 @@
 | 18:42 | Edited src/popup.html | 3→8 lines | ~93 |
 | 18:42 | Edited src/popup.js | 1→4 lines | ~76 |
 | 18:42 | Edited src/popup.css | expanded (+25 lines) | ~113 |
+| 18:44 | Session end: 44 writes across 11 files (content.js, conversion.spec.js, content.css, taobao-detail.html, semi-button.html) | 5 reads | ~10847 tok |
+| 22:32 | Session end: 44 writes across 11 files (content.js, conversion.spec.js, content.css, taobao-detail.html, semi-button.html) | 5 reads | ~11050 tok |
+| 22:50 | Edited src/popup.js | modified buildCurrencyOptions() | ~171 |
+| 22:50 | Edited src/popup.html | 4→1 lines | ~12 |
