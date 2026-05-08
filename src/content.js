@@ -137,9 +137,8 @@
 
       target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
       if (isSourceAmbiguous(r)) {
-          target.setAttribute("data-currio-ambiguous", "true");
-          target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
-        }
+        target.setAttribute("data-currio-ambiguous", "true");
+        target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
       return;
     }
