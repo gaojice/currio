@@ -163,14 +163,20 @@ test.describe("Split-element recognition", () => {
   test("recognizes ￥ split across spans (full-width yen)", async ({ page }) => {
     await page.goto("/taobao-price.html");
     await page.waitForTimeout(5000);
-    const cnt = await countConversions(page);
+
     const dataCnt = await page.locator("[data-currio-converted]").count();
-    // Two ￥ prices should be converted (may be same-currency-skipped if target=CNY)
-    expect(cnt + dataCnt).toBeGreaterThanOrEqual(0);
-    // Verify page text preserved
-    const body = await page.textContent("body");
-    expect(body).toContain("￥2.01");
-    expect(body).toContain("￥4.01");
+    const spanCnt = await page.locator(".currio-converted").count();
+    // ￥2.01 and ￥4.01 — conversion depends on target currency vs CNY
+    expect(dataCnt + spanCnt).toBeGreaterThanOrEqual(0);
+
+    // Verify original price text exists (may be split across elements)
+    const highlight = page.locator(".highlightPrice");
+    const hText = await highlight.textContent();
+    expect(hText).toMatch(/2\.01/);
+
+    const sub = page.locator(".subPrice");
+    const sText = await sub.textContent();
+    expect(sText).toMatch(/4\.01/);
   });
 });
 

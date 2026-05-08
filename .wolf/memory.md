@@ -10,3 +10,5 @@
 |------|--------|---------|---------|--------|
 | 13:59 | Edited src/content.js | 4→4 lines | ~18 |
 | 14:00 | Edited src/content.js | 10→9 lines | ~109 |
+| 14:01 | Session end: 2 writes across 1 files (content.js) | 1 reads | ~4301 tok |
+| 14:05 | Edited e2e/specs/conversion.spec.js | expanded (+6 lines) | ~222 |

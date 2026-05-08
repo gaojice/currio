@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T06:00:44.272Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T06:05:46.241Z
 > Files: 42 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -57,7 +57,7 @@
 
 ## e2e/specs/
 
-- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2335 tok)
+- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2390 tok)
 
 ## icons/
 

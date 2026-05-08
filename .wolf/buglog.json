@@ -1,4 +1,21 @@
 {
   "version": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-05-08T06:05:46.255Z",
+      "error_message": "Significant refactor of ",
+      "file": "e2e/specs/conversion.spec.js",
+      "root_cause": "7 lines replaced/restructured",
+      "fix": "Rewrote 12→18 lines (7 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-08T06:05:46.255Z"
+    }
+  ]
 }
