@@ -110,15 +110,22 @@
   function applyElementLevelReplacement(ancestor, replacements) {
     if (replacements.length === 1) {
       const r = replacements[0];
-      // Set data-attribute on the innermost element containing the price end
+      // Re-compute conversion using only the text content before the first non-price text
       const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
-      const target = (endNode?.parentElement?.textContent?.trim().length || 0) <= 200
-        ? endNode.parentElement
-        : ancestor;
-      target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
-      if (isSourceAmbiguous(r)) {
-        target.setAttribute("data-currio-ambiguous", "true");
-        target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+      if (!endNode) return;
+
+      const target = endNode.parentElement;
+      // Re-match with only the text up to and including endNode to avoid greedy digit consumption
+      const limitedText = getTextUpToNode(ancestor, endNode);
+      const limitedMatches = processText(limitedText, 0);
+      const limited = limitedMatches.find(m => m.offset + m.length === limitedText.length);
+
+      if (limited) {
+        target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(limited.convertedAmount, settings.targetCurrency));
+        if (isSourceAmbiguous(limited)) {
+          target.setAttribute("data-currio-ambiguous", "true");
+          target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        }
       }
       return;
     }
@@ -138,6 +145,16 @@
       }
       endNode.after(span);
     }
+  }
+
+  function getTextUpToNode(root, stopNode) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let text = "", n;
+    while ((n = w.nextNode())) {
+      text += n.textContent;
+      if (n === stopNode) break;
+    }
+    return text;
   }
 
   function textNodeAtOffset(el, targetOffset) {
