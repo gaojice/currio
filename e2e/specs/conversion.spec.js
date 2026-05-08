@@ -214,6 +214,41 @@ test.describe("Split-element recognition", () => {
 });
 
 // ============================================================
+test.describe("Inline symbol elements", () => {
+  test("recognizes ¥ inside <i> with digits as text node sibling", async ({ page }) => {
+    await page.goto("/inline-symbol.html");
+    const cnt = await waitForConversion(page);
+    // ¥ on zh-CN → CNY → converts unless target=CNY
+    expect(cnt).toBeGreaterThanOrEqual(1);
+  });
+
+  test("preserves original price text after inline-symbol conversion", async ({ page }) => {
+    await page.goto("/inline-symbol.html");
+    await page.waitForTimeout(5000);
+    const body = await page.textContent("body");
+    expect(body).toContain("35.09");
+    expect(body).toContain("19.99");
+    expect(body).toContain("42.50");
+  });
+
+  test("conversion renders after full price, not between symbol and digits", async ({ page }) => {
+    await page.goto("/inline-symbol.html");
+    await waitForConversion(page);
+
+    // Check that the parent <span> has the data-currio-converted attribute
+    // (not the <i> element), so ::after renders after "¥35.09" not "¥"
+    const spans = page.locator(".core_item_sku_price span");
+    const count = await spans.count();
+    let foundOnSpan = false;
+    for (let i = 0; i < count; i++) {
+      const hasAttr = await spans.nth(i).getAttribute("data-currio-converted");
+      if (hasAttr) { foundOnSpan = true; break; }
+    }
+    expect(foundOnSpan).toBe(true);
+  });
+});
+
+// ============================================================
 test.describe("Ambiguous $ handling", () => {
   test("ambiguous $ gets visual distinction", async ({ page }) => {
     await page.goto("/ambiguous.html");

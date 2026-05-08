@@ -94,12 +94,13 @@
     // Collect contiguous text: the symbol node + immediately following numeric-only nodes
     const numOnly = /^[\d,.]*$/;
     let text = startTextNode.textContent;
-    let sibling = startTextNode.parentElement?.nextElementSibling;
+    let sibling = startTextNode.parentElement?.nextSibling;
     while (sibling) {
-      const t = sibling.textContent.trim();
-      if (t && numOnly.test(t)) {
+      const t = (sibling.textContent || "").trim();
+      if (!t) { sibling = sibling.nextSibling; continue; } // skip whitespace nodes
+      if (numOnly.test(t)) {
         text += t;
-        sibling = sibling.nextElementSibling;
+        sibling = sibling.nextSibling;
       } else {
         break;
       }
@@ -133,6 +134,18 @@
           sib = sib.nextElementSibling;
         } else {
           break;
+        }
+      }
+
+      // If price extends into text-node siblings (e.g. <i>¥</i>35.09), use parent
+      // so ::after renders after the full price, not between symbol and digits
+      if (target === ancestor) {
+        let ns = ancestor.nextSibling;
+        while (ns) {
+          const t = (ns.textContent || "").trim();
+          if (/^[\d,.]*$/.test(t)) { target = ancestor.parentElement; break; }
+          if (t) break;
+          ns = ns.nextSibling;
         }
       }
 

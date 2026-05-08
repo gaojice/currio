@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Inline Symbol — JD-style</title>
+</head>
+<body>
+  <h1>Symbol in inline element, digits as text node</h1>
+  <!-- JD.com pattern: <i>¥</i> followed by bare text node digits -->
+  <div class="core_item_sku_price" style="margin-top: 1px;">
+    <span><i>¥</i>35.09</span>
+  </div>
+  <!-- Same pattern with $ -->
+  <p>Price: <span><i>$</i>19.99</span></p>
+  <!-- Same pattern with € -->
+  <p>Price: <span><b>€</b>42.50</span></p>
+</body>
+</html>
