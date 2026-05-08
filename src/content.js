@@ -13,7 +13,7 @@
   const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/gi;
   const CODE_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
 
-  const processedNodes = new WeakSet();
+  let processedNodes = new WeakSet();
   let rates = null;
   let settings = null;
   let lastScanTime = 0;
@@ -396,11 +396,6 @@
       attributeFilter: ["data-currio-converted"],
     });
 
-    // Safety net: periodic re-scan for React SPAs (every 3s)
-    setInterval(() => {
-      if (!rates) return;
-      refreshExisting();
-    }, 3000);
   }
 
   // ---- Listen for updates from background ----
