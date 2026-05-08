@@ -96,6 +96,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-08T09:59:00.244Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-05-08T10:05:59.178Z",
+      "error_message": "Missing guard clause",
+      "file": "src/content.js",
+      "root_cause": "No early return/throw for edge case: rawAmount === null",
+      "fix": "Added guard clause: if (rawAmount === null)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-08T10:05:59.178Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-08T10:06:21.877Z",
+      "error_message": "Missing await",
+      "file": "e2e/specs/conversion.spec.js",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-08T10:06:21.877Z"
     }
   ]
 }

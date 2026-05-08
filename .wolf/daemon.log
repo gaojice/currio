@@ -11,3 +11,5 @@
 [2026-05-08T06:16:58.434Z] [INFO] WebSocket client connected
 [2026-05-08T08:56:20.607Z] [INFO] WebSocket client connected
 [2026-05-08T09:42:58.185Z] [INFO] WebSocket client connected
+[2026-05-08T10:00:00.440Z] [INFO] Executing task: Full anatomy rescan
+[2026-05-08T10:00:00.480Z] [INFO] Task Full anatomy rescan completed in 39ms

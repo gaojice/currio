@@ -10,6 +10,8 @@
   const NUM_RE = /\d+(?:,\d{3})*(?:\.\d{1,6})?/;
   const SYMBOL_PREFIX_RE = /([$€£¥₩￥])\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
   const SYMBOL_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩￥元])/g;
+  const MULTI_SYM_RE = /\b(NT\$|HK\$|AU\$|CA\$|S\$|US\$)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
+  const MULTI_SYM_MAP = { "NT$": "TWD", "HK$": "HKD", "AU$": "AUD", "CA$": "CAD", "S$": "SGD", "US$": "USD" };
   const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/gi;
   const CODE_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
 
@@ -185,6 +187,16 @@
   function processTextNode(node) { return processText(node.textContent, 0); }
   function processText(text, offset) {
     const matches = [];
+
+    // Pattern 0: Multi-char symbols  NT$690, HK$100 etc.
+    for (const m of text.matchAll(MULTI_SYM_RE)) {
+      const rawAmount = parseNumber(m[2]);
+      if (rawAmount === null) continue;
+      const currency = MULTI_SYM_MAP[m[1]];
+      const converted = convert(rawAmount, currency);
+      if (converted === null) continue;
+      matches.push({ offset: m.index, length: m[0].length, sourceCurrency: currency, sourceAmount: rawAmount, convertedAmount: converted });
+    }
 
     // Pattern 1: Symbol prefix  $100
     for (const m of text.matchAll(SYMBOL_PREFIX_RE)) {

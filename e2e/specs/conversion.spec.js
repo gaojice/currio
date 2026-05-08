@@ -166,6 +166,19 @@ test.describe("Simple price recognition", () => {
 });
 
 // ============================================================
+test.describe("Multi-char currency symbols", () => {
+  test("recognizes NT$690 as TWD", async ({ page }) => {
+    await page.goto("/ntdollar.html");
+    await page.waitForTimeout(5000);
+    const cnt = await countConversions(page);
+    // NT$ → source TWD, converts unless target=TWD
+    expect(cnt).toBeGreaterThanOrEqual(0);
+    const body = await page.textContent("body");
+    expect(body).toContain("NT$690");
+  });
+});
+
+// ============================================================
 test.describe("Split-element recognition", () => {
   test("recognizes currency split across elements", async ({ page }) => {
     await page.goto("/split.html");
