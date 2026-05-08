@@ -1,6 +1,7 @@
 /* Inline conversion via CSS ::after (React-proof — DOM-less) */
 [data-currio-converted]::after {
   content: " " attr(data-currio-converted);
+  display: inline-block;
   color: #6b7280;
   font-size: 0.75em;
   border: 1px dashed #9ca3af;
@@ -33,6 +34,7 @@
 
 /* Fallback: span-based annotation (multi-price text nodes) */
 .currio-converted {
+  display: inline-block;
   color: #6b7280;
   font-size: 0.75em;
   border: 1px dashed #9ca3af;
