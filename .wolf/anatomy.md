@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T07:06:06.799Z
-> Files: 43 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T09:01:47.615Z
+> Files: 44 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -49,6 +49,7 @@
 - `dynamic.html` — Dynamic Content (~139 tok)
 - `excluded.html` — Excluded Content (~131 tok)
 - `fractional.html` — Fractional Amounts (~93 tok)
+- `semi-button.html` — Semi Button (~51 tok)
 - `spa-update.html` — SPA Text Update (~149 tok)
 - `split.html` — Split Currency Symbols (~129 tok)
 - `style-preview.html` — Currio 内嵌样式预览 (~2415 tok)
@@ -58,7 +59,7 @@
 
 ## e2e/specs/
 
-- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2426 tok)
+- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2570 tok)
 
 ## icons/
 
@@ -72,7 +73,7 @@
 
 - `background.js` — Background service worker — rates, caching, messaging (~1460 tok)
 - `content.css` — Styles: 3 rules (~435 tok)
-- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4309 tok)
+- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4288 tok)
 - `popup.css` — Styles: 21 rules (~750 tok)
 - `popup.html` — Currio (~299 tok)
 - `popup.js` — Popup settings UI — changes take effect immediately (~1231 tok)

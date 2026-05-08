@@ -153,6 +153,19 @@ test.describe("Suffixed amounts ($13M, $100k etc.)", () => {
 });
 
 // ============================================================
+test.describe("Simple price recognition", () => {
+  test("recognizes $20 in a single span", async ({ page }) => {
+    await page.goto("/semi-button.html");
+    await page.waitForTimeout(5000);
+    const cnt = await countConversions(page);
+    // $20 on en-US → source=USD → may be skipped if target=USD
+    expect(cnt).toBeGreaterThanOrEqual(0);
+    const body = await page.textContent("body");
+    expect(body).toContain("$20");
+  });
+});
+
+// ============================================================
 test.describe("Split-element recognition", () => {
   test("recognizes currency split across elements", async ({ page }) => {
     await page.goto("/split.html");

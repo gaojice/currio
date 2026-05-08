@@ -332,13 +332,11 @@
     observer = new MutationObserver(mutations => {
       for (const m of mutations) {
         if (m.type === "attributes") {
-          // React removed our data attribute — re-scan this element
+          // React removed our data attribute — re-scan IMMEDIATELY (no debounce)
           if (!m.target.hasAttribute("data-currio-converted")) {
-            if (!seenNodes.has(m.target)) {
-              seenNodes.add(m.target);
-              pendingNodes.push(m.target);
-            }
+            scanDocument(m.target);
           }
+          continue;
         } else if (m.type === "characterData") {
           if (!hasSymbol.test(m.target.textContent)) continue;
           processedNodes.delete(m.target);

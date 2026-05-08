@@ -91,17 +91,36 @@
       "action": "edit",
       "tokens": 106,
       "at": "2026-05-08T07:06:06.806Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/e2e/fixtures/semi-button.html",
+      "action": "create",
+      "tokens": 55,
+      "at": "2026-05-08T08:55:26.698Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+      "action": "edit",
+      "tokens": 159,
+      "at": "2026-05-08T08:55:44.891Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/src/content.js",
+      "action": "edit",
+      "tokens": 87,
+      "at": "2026-05-08T09:01:47.621Z"
     }
   ],
   "edit_counts": {
-    "src/content.js": 5,
-    "e2e/specs/conversion.spec.js": 2,
+    "src/content.js": 6,
+    "e2e/specs/conversion.spec.js": 3,
     "src/content.css": 5,
-    "e2e/fixtures/taobao-detail.html": 1
+    "e2e/fixtures/taobao-detail.html": 1,
+    "e2e/fixtures/semi-button.html": 1
   },
   "anatomy_hits": 2,
   "anatomy_misses": 0,
   "repeated_reads_warned": 11,
   "cerebrum_warnings": 0,
-  "stop_count": 6
+  "stop_count": 9
 }
