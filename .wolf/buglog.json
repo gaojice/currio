@@ -160,6 +160,38 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-08T10:34:16.246Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-08T10:39:42.440Z",
+      "error_message": "Incorrect value in code",
+      "file": "src/popup.js",
+      "root_cause": "Had \"autoEnabledLabel\"",
+      "fix": "Changed to \"currentSiteLabel\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-08T10:39:50.594Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-08T10:40:42.673Z",
+      "error_message": "Wrong condition in logic",
+      "file": "src/content.js",
+      "root_cause": "Condition was: if (!settings.autoEnabled)",
+      "fix": "Changed to: if (isBlacklisted()",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "js"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-08T10:40:42.673Z"
     }
   ]
 }

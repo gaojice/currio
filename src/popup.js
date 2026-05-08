@@ -30,7 +30,6 @@ function buildCurrencyOptions() {
 document.addEventListener("DOMContentLoaded", async () => {
   // Render i18n labels
   document.getElementById("targetCurrencyLabel").textContent = msg("targetCurrency");
-  document.getElementById("autoEnabledLabel").textContent = msg("autoEnabled");
   document.getElementById("currentSiteLabel").textContent = msg("currentSite");
   buildCurrencyOptions();
 
@@ -44,7 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   let blacklist = settings.blacklist || [];
 
   const $target = document.getElementById("targetCurrency");
-  const $auto = document.getElementById("autoEnabled");
   const $blacklist = document.getElementById("blacklist");
   const $domainName = document.getElementById("currentDomainName");
   const $toggleBtn = document.getElementById("toggleDomainBtn");
@@ -54,7 +52,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   $blacklistSummary.textContent = msg("blacklistCount", String(blacklist.length));
 
   $target.value = settings.targetCurrency || "TWD";
-  $auto.checked = settings.autoEnabled !== false;
   $blacklist.value = blacklist.join("\n");
 
   if (hostname) {
@@ -92,7 +89,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   $target.addEventListener("change", save);
-  $auto.addEventListener("change", save);
   $blacklist.addEventListener("blur", () => {
     $blacklistSummary.textContent = msg("blacklistCount", String(getCurrentBlacklist().length));
     updateToggleBtn();
@@ -114,7 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     blacklist = getCurrentBlacklist();
     const newSettings = {
       targetCurrency: $target.value,
-      autoEnabled: $auto.checked,
       blacklist,
     };
 

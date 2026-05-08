@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T10:34:16.236Z
-> Files: 45 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T10:40:42.664Z
+> Files: 46 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../.claude/plans/
+
+- `e2e-woolly-boole.md` — Remove autoEnabled toggle (~139 tok)
 
 ## ./
 
@@ -72,12 +76,12 @@
 
 ## src/
 
-- `background.js` — Background service worker — rates, caching, messaging (~1460 tok)
+- `background.js` — Background service worker — rates, caching, messaging (~1435 tok)
 - `content.css` — Styles: 3 rules (~435 tok)
-- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4587 tok)
+- `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4576 tok)
 - `popup.css` — Styles: 23 rules (~822 tok)
-- `popup.html` — Currio (~327 tok)
-- `popup.js` — Popup settings UI — changes take effect immediately (~1298 tok)
+- `popup.html` — Currio (~288 tok)
+- `popup.js` — Popup settings UI — changes take effect immediately (~1223 tok)
 - `utils.js` — Shared currency utilities — loaded as plain script for content & background (~940 tok)
 
 ## test-results/

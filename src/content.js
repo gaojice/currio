@@ -34,7 +34,6 @@
       return;
     }
 
-    if (!settings.autoEnabled) return;
     if (isBlacklisted()) return;
     if (!document.body) return;
 

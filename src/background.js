@@ -62,7 +62,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     detected = detectDefaultCurrency();
     await chrome.storage.local.set({
       targetCurrency: detected,
-      autoEnabled: true,
       blacklist: [],
     });
   }
@@ -78,10 +77,9 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       return true;
 
     case "GET_SETTINGS":
-      chrome.storage.local.get(["targetCurrency", "autoEnabled", "blacklist"])
+      chrome.storage.local.get(["targetCurrency", "blacklist"])
         .then(s => sendResponse({
           targetCurrency: s.targetCurrency || "TWD",
-          autoEnabled: s.autoEnabled !== false,
           blacklist: s.blacklist || [],
         }));
       return true;
