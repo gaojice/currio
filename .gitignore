@@ -5,3 +5,4 @@ dist/
 .env
 test-results/
 e2e/.user-data/
+.wolf
