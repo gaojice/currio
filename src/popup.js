@@ -20,8 +20,8 @@ function buildCurrencyOptions() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Render i18n labels
-  document.getElementById("reportLink").href = "https://gitea.lan/gaojice/currio/issues/new";
-  document.getElementById("donateLink").href = "https://gitea.lan/gaojice/currio";
+  document.getElementById("reportLink").href = "https://github.com/gaojice/currio/issues/new";
+  document.getElementById("donateImage").src = chrome.runtime.getURL("assets/support.jpg");
 
   document.getElementById("targetCurrencyLabel").textContent = msg("targetCurrency");
   document.getElementById("currentSiteLabel").textContent = msg("currentSite");
@@ -98,6 +98,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     $blacklistSummary.textContent = msg("blacklistCount", String(list.length));
     updateToggleBtn();
     save();
+  });
+
+  // Donate modal
+  const $donateModal = document.getElementById("donateModal");
+  document.getElementById("donateLink").addEventListener("click", () => {
+    $donateModal.classList.add("open");
+  });
+  document.getElementById("donateClose").addEventListener("click", () => {
+    $donateModal.classList.remove("open");
+  });
+  $donateModal.addEventListener("click", (e) => {
+    if (e.target === $donateModal) $donateModal.classList.remove("open");
   });
 
   async function save() {

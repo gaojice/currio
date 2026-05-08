@@ -32,7 +32,15 @@
     <div class="footer-links">
       <a id="reportLink" href="#" target="_blank" class="footer-link">🐛 报告问题</a>
       <span class="footer-dot">·</span>
-      <a id="donateLink" href="#" target="_blank" class="footer-link">☕ 请喝咖啡</a>
+      <span id="donateLink" class="footer-link">☕ 请喝咖啡</span>
+    </div>
+
+    <div id="donateModal" class="modal-overlay">
+      <div class="modal-content">
+        <button id="donateClose" class="modal-close">&times;</button>
+        <img id="donateImage" src="" alt="Support QR" class="donate-image" />
+        <p class="donate-text">谢谢你的支持！每一杯咖啡都是动力 ☕</p>
+      </div>
     </div>
   </div>
   <script src="popup.js"></script>
