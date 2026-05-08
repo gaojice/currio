@@ -29,6 +29,9 @@ function buildCurrencyOptions() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Render i18n labels
+  document.getElementById("reportLink").href = "https://gitea.lan/gaojice/currio/issues/new";
+  document.getElementById("donateLink").href = "https://gitea.lan/gaojice/currio";
+
   document.getElementById("targetCurrencyLabel").textContent = msg("targetCurrency");
   document.getElementById("currentSiteLabel").textContent = msg("currentSite");
   buildCurrencyOptions();

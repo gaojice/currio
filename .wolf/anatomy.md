@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T10:40:42.664Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T10:42:35.586Z
 > Files: 46 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/plans/
@@ -79,9 +79,9 @@
 - `background.js` — Background service worker — rates, caching, messaging (~1435 tok)
 - `content.css` — Styles: 3 rules (~435 tok)
 - `content.js` — Content script — DOM scanning, currency recognition, inline rendering (~4576 tok)
-- `popup.css` — Styles: 23 rules (~822 tok)
-- `popup.html` — Currio (~288 tok)
-- `popup.js` — Popup settings UI — changes take effect immediately (~1223 tok)
+- `popup.css` — Styles: 27 rules (~921 tok)
+- `popup.html` — Currio (~354 tok)
+- `popup.js` — Popup settings UI — changes take effect immediately (~1274 tok)
 - `utils.js` — Shared currency utilities — loaded as plain script for content & background (~940 tok)
 
 ## test-results/
