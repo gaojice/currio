@@ -164,19 +164,26 @@ test.describe("Split-element recognition", () => {
     await page.goto("/taobao-price.html");
     await page.waitForTimeout(5000);
 
-    const dataCnt = await page.locator("[data-currio-converted]").count();
-    const spanCnt = await page.locator(".currio-converted").count();
-    // ￥2.01 and ￥4.01 — conversion depends on target currency vs CNY
-    expect(dataCnt + spanCnt).toBeGreaterThanOrEqual(0);
-
-    // Verify original price text exists (may be split across elements)
     const highlight = page.locator(".highlightPrice");
-    const hText = await highlight.textContent();
-    expect(hText).toMatch(/2\.01/);
+    expect(await highlight.textContent()).toMatch(/2\.01/);
 
     const sub = page.locator(".subPrice");
-    const sText = await sub.textContent();
-    expect(sText).toMatch(/4\.01/);
+    expect(await sub.textContent()).toMatch(/4\.01/);
+  });
+
+  test("recognizes ￥ in taobao detail price structure", async ({ page }) => {
+    await page.goto("/taobao-detail.html");
+    await page.waitForTimeout(5000);
+
+    const cnt = await countConversions(page);
+    // ￥16.9 and ￥19.9 — depends on target vs CNY
+    expect(cnt).toBeGreaterThanOrEqual(0);
+
+    const highlight = page.locator(".highlightPrice");
+    expect(await highlight.textContent()).toMatch(/16\.9/);
+
+    const sub = page.locator(".subPrice");
+    expect(await sub.textContent()).toMatch(/19\.9/);
   });
 });
 

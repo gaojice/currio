@@ -49,16 +49,29 @@
       "action": "edit",
       "tokens": 18,
       "at": "2026-05-08T06:53:09.840Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+      "action": "create",
+      "tokens": 171,
+      "at": "2026-05-08T06:59:37.586Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+      "action": "edit",
+      "tokens": 258,
+      "at": "2026-05-08T06:59:59.616Z"
     }
   ],
   "edit_counts": {
     "src/content.js": 3,
-    "e2e/specs/conversion.spec.js": 1,
-    "src/content.css": 2
+    "e2e/specs/conversion.spec.js": 2,
+    "src/content.css": 2,
+    "e2e/fixtures/taobao-detail.html": 1
   },
   "anatomy_hits": 2,
   "anatomy_misses": 0,
   "repeated_reads_warned": 9,
   "cerebrum_warnings": 0,
-  "stop_count": 3
+  "stop_count": 4
 }

@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T06:53:09.824Z
-> Files: 42 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-08T06:59:59.609Z
+> Files: 43 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -53,11 +53,12 @@
 - `split.html` — Split Currency Symbols (~129 tok)
 - `style-preview.html` — Currio 内嵌样式预览 (~2415 tok)
 - `suffixed.html` — Suffixed Amounts (~103 tok)
+- `taobao-detail.html` — Taobao Detail (~160 tok)
 - `taobao-price.html` — Taobao-style Split Prices (~160 tok)
 
 ## e2e/specs/
 
-- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2390 tok)
+- `conversion.spec.js` — getConversionTexts: countConversions, waitForConversion (~2426 tok)
 
 ## icons/
 
