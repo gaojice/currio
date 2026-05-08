@@ -332,12 +332,16 @@
     observer = new MutationObserver(mutations => {
       for (const m of mutations) {
         if (m.type === "attributes") {
-          // React removed our data attribute — clear cache + re-scan immediately
+          // React removed our data attribute — re-scan element or its parent
           if (!m.target.hasAttribute("data-currio-converted")) {
-            const w = document.createTreeWalker(m.target, NodeFilter.SHOW_TEXT);
-            let n;
-            while ((n = w.nextNode())) processedNodes.delete(n);
-            scanDocument(m.target);
+            let el = m.target;
+            while (el && !document.contains(el)) el = el.parentElement;
+            if (el) {
+              const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+              let n;
+              while ((n = w.nextNode())) processedNodes.delete(n);
+              scanDocument(el);
+            }
           }
           continue;
         } else if (m.type === "characterData") {
