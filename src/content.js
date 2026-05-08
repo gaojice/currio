@@ -417,6 +417,9 @@
         rates = msg.rates;
         refreshExisting();
         break;
+      case "RESCAN":
+        refreshExisting();
+        break;
       case "SETTINGS_UPDATED":
         if (msg.settings?.targetCurrency && msg.settings.targetCurrency !== settings?.targetCurrency) {
           location.reload();

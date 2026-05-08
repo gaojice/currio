@@ -83,6 +83,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Force re-scan current page
+  document.getElementById("rescanBtn").addEventListener("click", () => {
+    if (tab?.id) {
+      chrome.tabs.sendMessage(tab.id, { type: "RESCAN" }).catch(() => {});
+      window.close();
+    }
+  });
+
   $target.addEventListener("change", save);
   $auto.addEventListener("change", save);
   $blacklist.addEventListener("blur", () => {

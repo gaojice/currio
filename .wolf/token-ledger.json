@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-05-08T05:51:22.360Z",
   "lifetime": {
-    "total_tokens_estimated": 82895,
-    "total_reads": 26,
-    "total_writes": 177,
+    "total_tokens_estimated": 113111,
+    "total_reads": 34,
+    "total_writes": 285,
     "total_sessions": 1,
-    "anatomy_hits": 26,
+    "anatomy_hits": 34,
     "anatomy_misses": 0,
-    "repeated_reads_blocked": 143,
-    "estimated_savings_vs_bare_cli": 611564
+    "repeated_reads_blocked": 195,
+    "estimated_savings_vs_bare_cli": 840560
   },
   "sessions": [
     {
@@ -1287,6 +1287,662 @@
         "output_tokens_estimated": 2227,
         "reads_count": 2,
         "writes_count": 23,
+        "repeated_reads_blocked": 13,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T10:08:12.308Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4373,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+          "tokens_estimated": 171,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 258,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 67,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 236,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 106,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/semi-button.html",
+          "tokens_estimated": 55,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 159,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 153,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 78,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 1,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 11,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 124,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 182,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/ntdollar.html",
+          "tokens_estimated": 92,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4775,
+        "output_tokens_estimated": 2779,
+        "reads_count": 2,
+        "writes_count": 27,
+        "repeated_reads_blocked": 13,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T10:29:39.191Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4373,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+          "tokens_estimated": 171,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 258,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 67,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 236,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 106,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/semi-button.html",
+          "tokens_estimated": 55,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 159,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 153,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 78,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 1,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 11,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 124,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 182,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/ntdollar.html",
+          "tokens_estimated": 92,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4775,
+        "output_tokens_estimated": 2779,
+        "reads_count": 2,
+        "writes_count": 27,
+        "repeated_reads_blocked": 13,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T10:30:03.032Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4373,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+          "tokens_estimated": 171,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 258,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 67,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 236,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 106,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/semi-button.html",
+          "tokens_estimated": 55,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 159,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 153,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 78,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 1,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 11,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 124,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 182,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/ntdollar.html",
+          "tokens_estimated": 92,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4775,
+        "output_tokens_estimated": 2779,
+        "reads_count": 2,
+        "writes_count": 27,
+        "repeated_reads_blocked": 13,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-05-08-1352",
+      "started": "2026-05-08T05:52:31.414Z",
+      "ended": "2026-05-08T10:31:30.296Z",
+      "reads": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 4373,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 402,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 109,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 91,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/taobao-detail.html",
+          "tokens_estimated": 171,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 258,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 67,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 56,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 236,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.css",
+          "tokens_estimated": 106,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/semi-button.html",
+          "tokens_estimated": 55,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 159,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 87,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 153,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 30,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 78,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 43,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 1,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 11,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 124,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/src/content.js",
+          "tokens_estimated": 182,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/fixtures/ntdollar.html",
+          "tokens_estimated": 92,
+          "action": "create"
+        },
+        {
+          "file": "/Users/gaojice/workspace/currio/e2e/specs/conversion.spec.js",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 4775,
+        "output_tokens_estimated": 2779,
+        "reads_count": 2,
+        "writes_count": 27,
         "repeated_reads_blocked": 13,
         "anatomy_lookups": 2
       }

@@ -88,6 +88,22 @@ textarea {
   background: #4f46e5;
 }
 
+.btn-outline {
+  width: 100%;
+  padding: 6px 18px;
+  font: inherit;
+  font-size: 12px;
+  color: #6366f1;
+  background: transparent;
+  border: 1px solid #6366f1;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: #eef2ff;
+}
+
 #statusMsg {
   font-size: 12px;
   color: #059669;

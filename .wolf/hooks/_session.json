@@ -11,6 +11,21 @@
       "count": 1,
       "tokens": 402,
       "first_read": "2026-05-08T06:08:36.877Z"
+    },
+    "/Users/gaojice/workspace/currio/src/popup.html": {
+      "count": 1,
+      "tokens": 299,
+      "first_read": "2026-05-08T10:33:08.627Z"
+    },
+    "/Users/gaojice/workspace/currio/src/popup.js": {
+      "count": 1,
+      "tokens": 1231,
+      "first_read": "2026-05-08T10:33:27.846Z"
+    },
+    "/Users/gaojice/workspace/currio/src/popup.css": {
+      "count": 2,
+      "tokens": 750,
+      "first_read": "2026-05-08T10:33:56.951Z"
     }
   },
   "files_written": [
@@ -175,19 +190,46 @@
       "action": "edit",
       "tokens": 154,
       "at": "2026-05-08T10:06:21.876Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/src/popup.html",
+      "action": "edit",
+      "tokens": 42,
+      "at": "2026-05-08T10:33:20.324Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/src/popup.js",
+      "action": "edit",
+      "tokens": 80,
+      "at": "2026-05-08T10:33:38.602Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/src/content.js",
+      "action": "edit",
+      "tokens": 119,
+      "at": "2026-05-08T10:33:50.362Z"
+    },
+    {
+      "file": "/Users/gaojice/workspace/currio/src/popup.css",
+      "action": "edit",
+      "tokens": 85,
+      "at": "2026-05-08T10:34:16.245Z"
     }
   ],
   "edit_counts": {
-    "src/content.js": 15,
+    "src/content.js": 16,
     "e2e/specs/conversion.spec.js": 4,
     "src/content.css": 5,
     "e2e/fixtures/taobao-detail.html": 1,
     "e2e/fixtures/semi-button.html": 1,
-    "e2e/fixtures/ntdollar.html": 1
+    "e2e/fixtures/ntdollar.html": 1,
+    "src/popup.html": 1,
+    "src/popup.js": 1,
+    "src/popup.css": 1
   },
-  "anatomy_hits": 2,
+  "anatomy_hits": 5,
   "anatomy_misses": 0,
-  "repeated_reads_warned": 13,
+  "repeated_reads_warned": 14,
   "cerebrum_warnings": 0,
-  "stop_count": 14
+  "stop_count": 18
 }
