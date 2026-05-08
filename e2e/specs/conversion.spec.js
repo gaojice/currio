@@ -89,24 +89,20 @@ test.describe("Dynamic content", () => {
     await page.waitForTimeout(2000);
 
     const updated = await countConversions(page);
-    // $200 should trigger a new conversion if source ≠ target
     if (initial > 0) {
       expect(updated).toBeGreaterThan(initial);
     }
   });
-});
 
   test("converts after SPA text update (characterData mutation)", async ({ page }) => {
     await page.goto("/spa-update.html");
     await page.waitForTimeout(5000);
     const initial = await countConversions(page);
 
-    // Click button that updates textContent in-place
     await page.click("#updateBtn");
     await page.waitForTimeout(2000);
 
     const updated = await countConversions(page);
-    // $150 (new value) should be re-scanned; $200 (unchanged) may also be converted
     expect(updated).toBeGreaterThanOrEqual(initial);
   });
 });
