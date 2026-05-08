@@ -4,7 +4,7 @@
   const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "CODE", "PRE", "NOSCRIPT"]);
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
-  const hasSymbol = /[$€£¥₩]/;
+  const hasSymbol = /[$€£¥₩￥]/;
 
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
   const NUM_RE = /\d+(?:,\d{3})*(?:\.\d{1,6})?/;
