@@ -1,5 +1,7 @@
 ![Currio](assets/screen.png)
 
+**[中文](README.zh-CN.md)** · **English**
+
 **Currio** — A silent Chrome extension that auto-converts every currency on any webpage into your own, the moment the page loads.
 
 >
@@ -8,7 +10,7 @@
 ## How It Works
 
 ```
-You visit amazon.com → $1,299 → $1,299 (≈ NT$41,568)
+You visit amazon.com → $1,299 → ¥9,429
 ```
 
 No clicks, no copy-paste, no new tab. The conversion sits right beside the original price, barely noticeable until you need it.
