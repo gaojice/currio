@@ -108,13 +108,17 @@
   }
 
   function applyElementLevelReplacement(ancestor, replacements) {
-    // Set data-attribute on ancestor (React-proof)
     if (replacements.length === 1) {
       const r = replacements[0];
-      ancestor.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
+      // Set data-attribute on the innermost element containing the price end
+      const endNode = textNodeAtOffset(ancestor, r.offset + r.length);
+      const target = (endNode?.parentElement?.textContent?.trim().length || 0) <= 200
+        ? endNode.parentElement
+        : ancestor;
+      target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(r.convertedAmount, settings.targetCurrency));
       if (isSourceAmbiguous(r)) {
-        ancestor.setAttribute("data-currio-ambiguous", "true");
-        ancestor.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
+        target.setAttribute("data-currio-ambiguous", "true");
+        target.setAttribute("data-currio-tip", chrome.i18n.getMessage("sourceAssumedUSD"));
       }
       return;
     }
