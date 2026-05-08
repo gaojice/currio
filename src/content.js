@@ -115,10 +115,10 @@
       if (!endNode) return;
 
       const target = endNode.parentElement;
-      // Re-match with only the text up to and including endNode to avoid greedy digit consumption
+      // Re-match with only text up to endNode (exclude sibling non-price digits)
       const limitedText = getTextUpToNode(ancestor, endNode);
       const limitedMatches = processText(limitedText, 0);
-      const limited = limitedMatches.find(m => m.offset + m.length === limitedText.length);
+      const limited = limitedMatches[limitedMatches.length - 1]; // last match = closest to endNode
 
       if (limited) {
         target.setAttribute("data-currio-converted", CurrioUtils.formatAmount(limited.convertedAmount, settings.targetCurrency));
