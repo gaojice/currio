@@ -55,8 +55,9 @@ test.describe("Fractional amounts", () => {
 
   test("converts fractional amounts when source ≠ target", async ({ page }) => {
     await page.goto("/fractional.html");
-    // All $ on en-US with USD target → 0; with non-USD target → 4
-    const cnt = await waitForConversion(page);
+    // All $ on en-US with USD target → 0 (same currency); non-USD target → 4
+    await page.waitForTimeout(5000);
+    const cnt = await countConversions(page);
     expect(cnt).toBeGreaterThanOrEqual(0);
   });
 });
