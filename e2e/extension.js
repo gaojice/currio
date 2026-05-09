@@ -20,7 +20,7 @@ export const test = base.extend({
         "--no-sandbox",
         "--disable-gpu",
       ],
-      headless: false,
+      headless: !!process.env.CI,
     });
 
     // Mock exchange rate API at context level
