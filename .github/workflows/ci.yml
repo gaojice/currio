@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm ci
+
+      - run: npx playwright test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: echo "version=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Package extension
+        run: |
+          zip -r currio-v${{ steps.version.outputs.version }}.zip . \
+            -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
+               ".github/*" "*.DS_Store" ".DS_Store" \
+               "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: currio-v${{ steps.version.outputs.version }}
+          path: currio-v${{ steps.version.outputs.version }}.zip
