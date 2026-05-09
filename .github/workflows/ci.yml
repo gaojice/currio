@@ -3,8 +3,12 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   test:
@@ -47,3 +51,28 @@ jobs:
         with:
           name: currio-v${{ steps.version.outputs.version }}
           path: currio-v${{ steps.version.outputs.version }}.zip
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: echo "version=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Package extension
+        run: |
+          zip -r currio-v${{ steps.version.outputs.version }}.zip . \
+            -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
+               ".github/*" "*.DS_Store" ".DS_Store" \
+               "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.version }}
+          files: currio-v${{ steps.version.outputs.version }}.zip
+          generate_release_notes: true
