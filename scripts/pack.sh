@@ -31,7 +31,7 @@ done
 echo "$EXCLUDE_ARGS" > /tmp/currio-excludes.txt
 
 # Use rsync-style exclude with temp file
-zip -r "$ZIP" . -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" "*.DS_Store" ".DS_Store" "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
+zip -r "$ZIP" . -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" "*.DS_Store" ".DS_Store" "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*" "landing/*"
 
 echo ""
 echo "Done: $ZIP ($(du -h "$ZIP" | cut -f1))"

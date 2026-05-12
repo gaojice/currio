@@ -47,7 +47,7 @@ jobs:
         run: |
           zip -r currio-v${{ steps.version.outputs.version }}.zip . \
             -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
-               ".github/*" "*.DS_Store" ".DS_Store" \
+               ".github/*" "*.DS_Store" ".DS_Store" "landing/*" \
                "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
 
       - uses: actions/upload-artifact@v4
@@ -71,7 +71,7 @@ jobs:
         run: |
           zip -r currio-v${{ steps.version.outputs.version }}.zip . \
             -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
-               ".github/*" "*.DS_Store" ".DS_Store" \
+               ".github/*" "*.DS_Store" ".DS_Store" "landing/*" \
                "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
 
       - uses: softprops/action-gh-release@v2

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="icon128.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">Privacy Policy — Currio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #F59E0B;
+    --color-on-primary: #0F172A;
+    --color-accent: #8B5CF6;
+    --color-background: #0F172A;
+    --color-foreground: #F8FAFC;
+    --color-card: #1E293B;
+    --color-muted-fg: #94A3B8;
+    --color-border: #334155;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    line-height: 1.7;
+  }
+
+  html[lang="zh-CN"] body {
+    font-family: 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif;
+  }
+
+  h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; letter-spacing: -0.02em; }
+  h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 0.75rem; color: var(--color-primary); }
+  p, li { color: var(--color-muted-fg); margin-bottom: 0.75rem; }
+  ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 3rem);
+  }
+
+  .nav {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 3rem;
+  }
+  .nav .container { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 1.125rem; font-weight: 700;
+    color: var(--color-foreground); text-decoration: none;
+  }
+  .nav-logo img { width: 28px; height: 28px; border-radius: 5px; }
+  .nav-logo:hover { opacity: 0.8; }
+
+  .lang-switch {
+    display: inline-flex; align-items: center;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.25rem;
+  }
+  .lang-switch button {
+    background: transparent; border: none; color: var(--color-muted-fg);
+    font-family: inherit; font-size: 0.8125rem; font-weight: 500;
+    padding: 0.375rem 0.75rem; border-radius: 9999px;
+    cursor: pointer; transition: all 150ms;
+  }
+  .lang-switch button.active { background: var(--color-primary); color: var(--color-on-primary); }
+
+  .content { padding-bottom: 5rem; }
+  .last-updated { font-size: 0.875rem; color: var(--color-muted-fg); margin-top: 0.5rem; margin-bottom: 2rem; }
+
+  .footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.875rem; color: var(--color-muted-fg);
+    text-align: center;
+  }
+  .footer a { color: var(--color-primary); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo">
+      <img src="icon128.png" alt="Currio">
+      Currio
+    </a>
+    <div class="lang-switch" role="radiogroup" aria-label="Language">
+      <button role="radio" aria-checked="true" data-lang="en" id="lang-en">EN</button>
+      <button role="radio" aria-checked="false" data-lang="zh-CN" id="lang-zh">中文</button>
+    </div>
+  </div>
+</nav>
+
+<main class="content">
+  <div class="container">
+    <h1 data-i18n="heading">Privacy Policy</h1>
+    <p class="last-updated" data-i18n="updated">Last updated: May 12, 2026</p>
+
+    <p data-i18n="intro">Currio ("the Extension") is built with privacy as a core principle. This policy explains what data we handle and how.</p>
+
+    <h2 data-i18n="s1Title">1. Data Collection</h2>
+    <p data-i18n="s1Body">Currio does <strong>not</strong> collect, store, or transmit any personal information. We do not use analytics, tracking pixels, or any form of user monitoring.</p>
+
+    <h2 data-i18n="s2Title">2. What the Extension Processes Locally</h2>
+    <p data-i18n="s2Body">The Extension scans webpage text content to identify currency symbols and price patterns. All scanning, matching, and conversion rendering happens entirely within your browser. No page content is sent to any server.</p>
+
+    <h2 data-i18n="s3Title">3. Exchange Rate API</h2>
+    <p data-i18n="s3Body">To fetch current exchange rates, the Extension makes requests directly from your browser to ExchangeRate-API (<a href="https://www.exchangerate-api.com" style="color:var(--color-accent)" target="_blank" rel="noopener">exchangerate-api.com</a>). These requests contain only the base currency code (e.g., "USD") — no page data, no browsing history, no personal identifiers. Rates are cached locally for 45 minutes to minimize requests.</p>
+
+    <h2 data-i18n="s4Title">4. Permissions</h2>
+    <p data-i18n="s4Body">Currio requests the following Chrome permissions:</p>
+    <ul>
+      <li data-i18n="perm1"><strong>Storage</strong> — to save your currency preference and cached exchange rates locally.</li>
+      <li data-i18n="perm2"><strong>Active Tab</strong> — to scan the current page for currency patterns upon page load.</li>
+      <li data-i18n="perm3"><strong>Host Permission (exchangerate-api.com)</strong> — to fetch exchange rate data.</li>
+    </ul>
+
+    <h2 data-i18n="s5Title">5. Data Sharing</h2>
+    <p data-i18n="s5Body">We do not share any data with third parties because we do not collect any data in the first place.</p>
+
+    <h2 data-i18n="s6Title">6. Children's Privacy</h2>
+    <p data-i18n="s6Body">The Extension does not collect information from anyone, including children under the age of 13.</p>
+
+    <h2 data-i18n="s7Title">7. Changes to This Policy</h2>
+    <p data-i18n="s7Body">If we update this policy, the revised version will be posted at this URL with an updated effective date.</p>
+
+    <h2 data-i18n="s8Title">8. Contact</h2>
+    <p data-i18n-html="s8Body">For questions about this privacy policy, please open an issue at <a href="https://github.com/gaojice/currio/issues" style="color:var(--color-accent)" target="_blank" rel="noopener">github.com/gaojice/currio/issues</a>.</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <a href="index.html" data-i18n="backHome">&larr; Back to Currio</a>
+  </div>
+</footer>
+
+<script>
+const t = {
+  en: {
+    title: 'Privacy Policy — Currio',
+    heading: 'Privacy Policy',
+    updated: 'Last updated: May 12, 2026',
+    intro: 'Currio ("the Extension") is built with privacy as a core principle. This policy explains what data we handle and how.',
+    s1Title: '1. Data Collection',
+    s1Body: 'Currio does NOT collect, store, or transmit any personal information. We do not use analytics, tracking pixels, or any form of user monitoring.',
+    s2Title: '2. What the Extension Processes Locally',
+    s2Body: 'The Extension scans webpage text content to identify currency symbols and price patterns. All scanning, matching, and conversion rendering happens entirely within your browser. No page content is sent to any server.',
+    s3Title: '3. Exchange Rate API',
+    s3Body: 'To fetch current exchange rates, the Extension makes requests directly from your browser to ExchangeRate-API (exchangerate-api.com). These requests contain only the base currency code (e.g., "USD") — no page data, no browsing history, no personal identifiers. Rates are cached locally for 45 minutes to minimize requests.',
+    s4Title: '4. Permissions',
+    s4Body: 'Currio requests the following Chrome permissions:',
+    perm1: 'Storage — to save your currency preference and cached exchange rates locally.',
+    perm2: 'Active Tab — to scan the current page for currency patterns upon page load.',
+    perm3: 'Host Permission (exchangerate-api.com) — to fetch exchange rate data.',
+    s5Title: '5. Data Sharing',
+    s5Body: 'We do not share any data with third parties because we do not collect any data in the first place.',
+    s6Title: '6. Children\'s Privacy',
+    s6Body: 'The Extension does not collect information from anyone, including children under the age of 13.',
+    s7Title: '7. Changes to This Policy',
+    s7Body: 'If we update this policy, the revised version will be posted at this URL with an updated effective date.',
+    s8Title: '8. Contact',
+    s8Body: 'For questions about this privacy policy, please open an issue at <a href="https://github.com/gaojice/currio/issues" style="color:var(--color-accent)" target="_blank" rel="noopener">github.com/gaojice/currio/issues</a>.',
+    backHome: '← Back to Currio',
+  },
+  'zh-CN': {
+    title: '隐私政策 — Currio',
+    heading: '隐私政策',
+    updated: '最后更新：2026 年 5 月 12 日',
+    intro: 'Currio（"本扩展"）将隐私作为核心原则。本政策说明我们处理哪些数据以及如何处理。',
+    s1Title: '1. 数据收集',
+    s1Body: 'Currio 不收集、不存储、不传输任何个人信息。我们不使用分析工具、追踪像素或任何形式的用户监控。',
+    s2Title: '2. 扩展在本地处理的内容',
+    s2Body: '本扩展扫描网页文本内容以识别货币符号和价格模式。所有扫描、匹配和转换渲染完全在你的浏览器内完成。没有任何页面内容被发送到任何服务器。',
+    s3Title: '3. 汇率 API',
+    s3Body: '为获取最新汇率，本扩展直接从你的浏览器向 ExchangeRate-API（exchangerate-api.com）发起请求。这些请求仅包含基础货币代码（如 "USD"）——不含任何页面数据、浏览历史或个人标识。汇率在本地缓存 45 分钟以最小化请求次数。',
+    s4Title: '4. 权限说明',
+    s4Body: 'Currio 请求以下 Chrome 权限：',
+    perm1: 'Storage（存储）——在本地保存你的货币偏好和缓存的汇率数据。',
+    perm2: 'Active Tab（活动标签页）——在页面加载时扫描当前页面的货币模式。',
+    perm3: 'Host Permission（主机权限，exchangerate-api.com）——获取汇率数据。',
+    s5Title: '5. 数据共享',
+    s5Body: '我们不与任何第三方共享数据，因为我们从一开始就不收集任何数据。',
+    s6Title: '6. 儿童隐私',
+    s6Body: '本扩展不收集任何人的信息，包括 13 岁以下儿童。',
+    s7Title: '7. 政策变更',
+    s7Body: '如果我们更新本政策，修订版将发布在此 URL 并更新生效日期。',
+    s8Title: '8. 联系方式',
+    s8Body: '关于本隐私政策如有疑问，请在 <a href="https://github.com/gaojice/currio/issues" style="color:var(--color-accent)" target="_blank" rel="noopener">github.com/gaojice/currio/issues</a> 提交 issue。',
+    backHome: '← 返回 Currio 主页',
+  }
+};
+
+function detectLang() {
+  const stored = localStorage.getItem('currio-lang');
+  if (stored && t[stored]) return stored;
+  const nav = navigator.language || '';
+  return nav.startsWith('zh') ? 'zh-CN' : 'en';
+}
+
+function applyLang(lang) {
+  document.documentElement.lang = lang;
+  localStorage.setItem('currio-lang', lang);
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[lang][key]) el.textContent = t[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[lang][key]) el.innerHTML = t[lang][key];
+  });
+
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
+    const isActive = btn.getAttribute('data-lang') === lang;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.getAttribute('data-lang')));
+});
+
+applyLang(detectLang());
+</script>
+</body>
+</html>

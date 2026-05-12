@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="icon128.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="title">Currio — Auto Currency Converter for Chrome</title>
+<meta name="description" data-i18n-attrs="content:description">
+<meta property="og:title" data-i18n-attrs="content:ogTitle">
+<meta property="og:description" data-i18n-attrs="content:ogDescription">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #F59E0B;
+    --color-on-primary: #0F172A;
+    --color-secondary: #FBBF24;
+    --color-accent: #8B5CF6;
+    --color-background: #0F172A;
+    --color-foreground: #F8FAFC;
+    --color-card: #1E293B;
+    --color-card-hover: #222735;
+    --color-muted: #272F42;
+    --color-muted-fg: #94A3B8;
+    --color-border: #334155;
+    --color-destructive: #EF4444;
+    --color-ring: #F59E0B;
+    --radius: 12px;
+    --radius-lg: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  html[lang="zh-CN"] body {
+    font-family: 'IBM Plex Sans', 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'Noto Sans SC', sans-serif;
+  }
+
+  /* Typography */
+  h1, h2, h3, h4 { font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(2.5rem, 8vw, 5.5rem); font-weight: 900; letter-spacing: -0.04em; }
+  html[lang="zh-CN"] h1 { font-weight: 800; }
+  h2 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+  h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+  p { color: var(--color-muted-fg); }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 200ms ease-out;
+    border: none;
+    white-space: nowrap;
+  }
+  .btn:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  .btn-primary { background: var(--color-primary); color: var(--color-on-primary); }
+  .btn-primary:hover {
+    background: var(--color-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-foreground);
+    border: 1px solid var(--color-border);
+  }
+  .btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .btn-lg { padding: 1rem 2.5rem; font-size: 1.125rem; }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1rem 0;
+    background: transparent;
+    transition: background 200ms ease-out, backdrop-filter 200ms ease-out;
+  }
+  .nav.scrolled {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .nav .container { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--color-foreground); text-decoration: none;
+  }
+  .nav-logo svg { width: 32px; height: 32px; }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-links a {
+    color: var(--color-muted-fg); text-decoration: none;
+    font-size: 0.9375rem; font-weight: 500; transition: color 150ms;
+  }
+  .nav-links a:hover { color: var(--color-foreground); }
+
+  /* Lang switch */
+  .lang-switch {
+    display: inline-flex; align-items: center;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.25rem;
+    gap: 0;
+  }
+  .lang-switch button {
+    background: transparent; border: none; color: var(--color-muted-fg);
+    font-family: inherit; font-size: 0.8125rem; font-weight: 500;
+    padding: 0.375rem 0.75rem; border-radius: 9999px;
+    cursor: pointer; transition: all 150ms;
+  }
+  .lang-switch button.active {
+    background: var(--color-primary); color: var(--color-on-primary);
+  }
+  .lang-switch button:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 1px; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 8rem 0 4rem; position: relative;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    top: 20%; left: 50%; transform: translate(-50%, -50%);
+    width: 800px; height: 600px;
+    background: radial-gradient(ellipse, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content { max-width: 800px; margin: 0 auto; text-align: center; position: relative; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.375rem 1rem;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 9999px;
+    font-size: 0.875rem; font-weight: 500;
+    color: var(--color-accent); margin-bottom: 2rem;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px; background: var(--color-accent);
+    border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 40%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    margin-bottom: 2.5rem; max-width: 560px;
+    margin-left: auto; margin-right: auto;
+  }
+  .hero-actions {
+    display: flex; align-items: center;
+    justify-content: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .hero-demo {
+    margin-top: 5rem; padding: 1.5rem;
+    background: var(--color-card); border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.9375rem; color: var(--color-muted-fg);
+    text-align: left; max-width: 480px;
+    margin-left: auto; margin-right: auto; position: relative;
+  }
+  .hero-demo-line { display: flex; align-items: center; gap: 0.75rem; padding: 0.375rem 0; }
+  .hero-demo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .hero-demo-dot.original { background: var(--color-muted-fg); }
+  .hero-demo-dot.converted { background: var(--color-primary); }
+  .hero-demo-label {
+    font-size: 0.75rem; color: var(--color-muted-fg);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;
+  }
+  .hero-demo-arrow { color: var(--color-primary); margin: 0.25rem 0 0.25rem 2.5rem; }
+  .demo-converted-price {
+    display: inline-block;
+    border: 1px dashed var(--color-primary);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    color: var(--color-primary);
+    margin-left: 0.25rem;
+  }
+
+  .section { padding: 6rem 0; }
+  .section-label {
+    font-size: 0.8125rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--color-primary); margin-bottom: 0.75rem;
+  }
+  .section-header { text-align: center; max-width: 640px; margin: 0 auto 4rem; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .feature-card {
+    padding: 2rem; background: var(--color-card);
+    border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    transition: border-color 200ms, transform 200ms, box-shadow 200ms;
+  }
+  .feature-card:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  }
+  .feature-card-icon {
+    width: 48px; height: 48px; display: flex;
+    align-items: center; justify-content: center;
+    background: rgba(139, 92, 246, 0.12); border-radius: var(--radius);
+    margin-bottom: 1.25rem; color: var(--color-accent);
+  }
+  .feature-card h3 { margin-bottom: 0.5rem; font-size: 1.125rem; }
+  .feature-card p { font-size: 0.9375rem; line-height: 1.65; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; counter-reset: step; }
+  .step { position: relative; padding: 2.5rem 2rem; text-align: center; counter-increment: step; }
+  .step::before {
+    content: counter(step);
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; background: var(--color-primary);
+    color: var(--color-on-primary); font-size: 1.25rem; font-weight: 700;
+    border-radius: 50%; margin-bottom: 1.5rem;
+  }
+  .step h3 { margin-bottom: 0.5rem; }
+
+  .divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+    margin: 0;
+  }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center; }
+  .stat-value {
+    font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
+    color: var(--color-primary); letter-spacing: -0.03em; line-height: 1;
+  }
+  .stat-label { font-size: 0.9375rem; color: var(--color-muted-fg); margin-top: 0.5rem; }
+
+  .comparison {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    max-width: 800px; margin: 0 auto;
+  }
+  .comparison-col {
+    padding: 2rem; border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+  .comparison-col.without { background: rgba(239, 68, 68, 0.06); border-color: rgba(239, 68, 68, 0.2); }
+  .comparison-col.with { background: rgba(34, 197, 94, 0.06); border-color: rgba(34, 197, 94, 0.2); }
+  .comparison-col h4 {
+    font-size: 0.8125rem; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 1rem;
+  }
+  .comparison-col.without h4 { color: var(--color-destructive); }
+  .comparison-col.with h4 { color: #22C55E; }
+  .comparison-col ul { list-style: none; }
+  .comparison-col li {
+    padding: 0.375rem 0; font-size: 0.9375rem;
+    color: var(--color-muted-fg); display: flex; align-items: center; gap: 0.5rem;
+  }
+
+  .cta-section {
+    text-align: center; padding: 6rem 0; position: relative;
+  }
+  .cta-section::before {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; position: relative; }
+  .cta-section p { font-size: 1.125rem; margin-bottom: 2rem; position: relative; }
+
+  .footer {
+    padding: 3rem 0; border-top: 1px solid var(--color-border);
+    font-size: 0.875rem; color: var(--color-muted-fg);
+  }
+  .footer .container {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a { color: var(--color-muted-fg); text-decoration: none; transition: color 150ms; }
+  .footer-links a:hover { color: var(--color-foreground); }
+
+  /* Scroll-reveal */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .steps { grid-template-columns: 1fr; }
+    .comparison { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; gap: 1.5rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .hero { padding-top: 6rem; }
+    .footer .container { flex-direction: column; text-align: center; }
+    .lang-switch { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <img src="icon128.png" alt="Currio" width="32" height="32" style="border-radius:6px">
+      Currio
+    </a>
+    <div class="nav-links">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#how-it-works" data-i18n="navHow">How It Works</a>
+	      <a href="privacy.html" data-i18n="navPrivacy">Privacy</a>
+      <a href="#why-currio" data-i18n="navWhy">Why Currio</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <div class="lang-switch" role="radiogroup" aria-label="Language">
+        <button role="radio" aria-checked="true" data-lang="en" id="lang-en">EN</button>
+        <button role="radio" aria-checked="false" data-lang="zh-CN" id="lang-zh">中文</button>
+      </div>
+      <a href="#get-started" class="btn btn-primary" data-i18n="navCTA">Add to Chrome</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="container hero-content reveal">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span data-i18n="heroBadge">Now on Chrome Web Store</span>
+      </div>
+      <h1 data-i18n-html="heroTitle">Every currency,<br>instantly yours.</h1>
+      <p data-i18n="heroDesc">Currio silently converts every price on any webpage into your local currency. No clicks, no copy-paste, no mental math.</p>
+      <div class="hero-actions">
+        <a href="#get-started" class="btn btn-primary btn-lg" data-i18n="heroCTA">Add to Chrome — It's Free</a>
+        <a href="https://github.com/gaojice/currio" class="btn btn-outline btn-lg" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span data-i18n="heroGitHub">View on GitHub</span>
+        </a>
+      </div>
+      <div class="hero-demo reveal">
+        <div class="hero-demo-label" data-i18n="demoLabel">Live Demo</div>
+        <div class="hero-demo-line" data-i18n-html="demoLine1"></div>
+        <div class="hero-demo-arrow">↓</div>
+        <div class="hero-demo-line" data-i18n-html="demoLine2"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="featuresLabel">Features</div>
+        <h2 data-i18n="featuresTitle">Built for zero-friction browsing.</h2>
+        <p data-i18n="featuresDesc">Currio works silently in the background. You browse normally — it handles the rest.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <h3 data-i18n="feat1Title">Auto-Detect</h3>
+          <p data-i18n="feat1Desc">Recognizes $100, ¥1000, €50, £30, ₩50000, NT$690, HK$100, and dozens more — on any website.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 data-i18n="feat2Title">Smart Inference</h3>
+          <p data-i18n="feat2Desc">$ maps to 6+ currencies. Currio resolves it from page locale, browser language, TLD, and surrounding context.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3 data-i18n="feat3Title">Always Fresh Rates</h3>
+          <p data-i18n="feat3Desc">45-min TTL cache with exponential backoff on failures. Always shows current rates, never stale.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3 data-i18n="feat4Title">React-Proof</h3>
+          <p data-i18n="feat4Desc">Renders via CSS ::after pseudo-elements — zero DOM mutations. Won't break any SPA or reactive framework.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 data-i18n="feat5Title">Zero Config</h3>
+          <p data-i18n="feat5Desc">Detects your preferred currency from browser language on first install. Works out of the box.</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3 data-i18n="feat6Title">Privacy First</h3>
+          <p data-i18n="feat6Desc">No tracking, no analytics, no data collection. Rate requests go directly to ExchangeRate-API.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="howLabel">How It Works</div>
+        <h2 data-i18n="howTitle">Three steps. That's it.</h2>
+        <p data-i18n="howDesc">Install, browse, and let Currio do the math while you focus on what matters.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <h3 data-i18n="step1Title">Install</h3>
+          <p data-i18n="step1Desc">Add Currio from the Chrome Web Store. It picks up your local currency automatically.</p>
+        </div>
+        <div class="step reveal">
+          <h3 data-i18n="step2Title">Browse</h3>
+          <p data-i18n="step2Desc">Visit any website. Currio scans the page and detects prices in real time as the DOM updates.</p>
+        </div>
+        <div class="step reveal">
+          <h3 data-i18n="step3Title">Read in Your Currency</h3>
+          <p data-i18n="step3Desc">Converted prices appear inline, right next to the original — barely noticeable until you need them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="why-currio">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label" data-i18n="whyLabel">Why Currio</div>
+        <h2 data-i18n="whyTitle">Stop doing math in your head.</h2>
+        <p data-i18n="whyDesc">Most currency converters make you copy, paste, and switch tabs. Currio works where you browse.</p>
+      </div>
+      <div class="comparison reveal">
+        <div class="comparison-col without">
+          <h4 data-i18n="withoutTitle">Without Currio</h4>
+          <ul>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span data-i18n="without1">Copy price from the page</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span data-i18n="without2">Open a new tab for currency converter</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span data-i18n="without3">Paste, select currencies, read result</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span data-i18n="without4">Repeat for every. single. price.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="comparison-col with">
+          <h4 data-i18n="withTitle">With Currio</h4>
+          <ul>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-i18n="with1">Install once, forget about it</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-i18n="with2">Browse any website normally</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-i18n="with3">See all prices in your currency, automatically</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span data-i18n="with4">That's it. No extra steps. Ever.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="stats reveal">
+        <div>
+          <div class="stat-value">&lt;50KB</div>
+          <div class="stat-label" data-i18n="stat1">Unpacked Size</div>
+        </div>
+        <div>
+          <div class="stat-value">&lt;3%</div>
+          <div class="stat-label" data-i18n="stat2">Page Overhead</div>
+        </div>
+        <div>
+          <div class="stat-value">45min</div>
+          <div class="stat-label" data-i18n="stat3">Rate Cache TTL</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section" id="get-started">
+    <div class="container reveal">
+      <h2 data-i18n="ctaTitle">Ready to browse without borders?</h2>
+      <p data-i18n="ctaDesc">Free. Lightweight. No account needed.</p>
+      <a href="#" class="btn btn-primary btn-lg" style="font-size:1.125rem;padding:1.125rem 3rem;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M5.5 18.5l2-2M16.5 7.5l2-2" stroke="currentColor" stroke-width="2"/></svg>
+        <span data-i18n="ctaButton">Add to Chrome — It's Free</span>
+      </a>
+      <p style="margin-top:1rem;font-size:0.875rem;color:var(--color-muted-fg)" data-i18n-html="ctaAlt">
+        Also available on <a href="https://github.com/gaojice/currio" style="color:var(--color-primary)" target="_blank" rel="noopener">GitHub</a> for manual install.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <img src="icon128.png" alt="Currio" width="20" height="20" style="border-radius:4px">
+      <span>Currio</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/gaojice/currio" target="_blank" rel="noopener">GitHub</a>
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#how-it-works" data-i18n="navHow">How It Works</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── i18n Translations ──────────────────────────────────────────────
+const t = {
+  en: {
+    title: 'Currio — Auto Currency Converter for Chrome',
+    description: 'Currio silently converts every price on any webpage into your local currency. No clicks, no copy-paste, no mental math.',
+    ogTitle: 'Currio — Auto Currency Converter',
+    ogDescription: 'Every currency on every page, instantly converted to yours.',
+    navFeatures: 'Features',
+    navHow: 'How It Works',
+    navPrivacy: 'Privacy',
+    navWhy: 'Why Currio',
+    navCTA: 'Add to Chrome',
+    heroBadge: 'Now on Chrome Web Store',
+    heroTitle: 'Browse the web.<br>We do the math.',
+    heroDesc: 'Currio silently converts every price on any webpage into your local currency. No clicks, no copy-paste, no mental math.',
+    heroCTA: 'Add to Chrome — It\'s Free',
+    heroGitHub: 'View on GitHub',
+    demoLabel: 'Live Demo',
+    demoLine1: '<span class="hero-demo-dot original"></span><span>taobao.com — ¥9,429</span>',
+    demoLine2: '<span class="hero-demo-dot converted"></span><span>taobao.com — ¥9,429 <span class="demo-converted-price">$1,299</span></span>',
+    featuresLabel: 'Features',
+    featuresTitle: 'One install. Zero worries.',
+    featuresDesc: 'Currio works silently in the background. You browse normally — it handles the rest.',
+    feat1Title: 'Auto-Detect',
+    feat1Desc: 'Recognizes $100, ¥1000, €50, £30, ₩50000, NT$690, HK$100, and dozens more — on any website.',
+    feat2Title: 'Smart Inference',
+    feat2Desc: '$ maps to 6+ currencies. Currio resolves it from page locale, browser language, TLD, and surrounding context.',
+    feat3Title: 'Always Fresh Rates',
+    feat3Desc: '45-min TTL cache with exponential backoff on failures. Always shows current rates, never stale.',
+    feat4Title: 'React-Proof',
+    feat4Desc: 'Renders via CSS ::after pseudo-elements — zero DOM mutations. Won\'t break any SPA or reactive framework.',
+    feat5Title: 'Zero Config',
+    feat5Desc: 'Detects your preferred currency from browser language on first install. Works out of the box.',
+    feat6Title: 'Privacy First',
+    feat6Desc: 'No tracking, no analytics, no data collection. Rate requests go directly to ExchangeRate-API.',
+    howLabel: 'How It Works',
+    howTitle: 'Three steps. That\'s it.',
+    howDesc: 'Install, browse, and let Currio do the math while you focus on what matters.',
+    step1Title: 'Install',
+    step1Desc: 'Add Currio from the Chrome Web Store. It picks up your local currency automatically.',
+    step2Title: 'Browse',
+    step2Desc: 'Visit any website. Currio scans the page and detects prices in real time as the DOM updates.',
+    step3Title: 'Read in Your Currency',
+    step3Desc: 'Converted prices appear inline, right next to the original — barely noticeable until you need them.',
+    whyLabel: 'Why Currio',
+    whyTitle: 'Stop doing math in your head.',
+    whyDesc: 'Most currency converters make you copy, paste, and switch tabs. Currio works where you browse.',
+    withoutTitle: 'Without Currio',
+    without1: 'Copy price from the page',
+    without2: 'Open a new tab for currency converter',
+    without3: 'Paste, select currencies, read result',
+    without4: 'Repeat for every. single. price.',
+    withTitle: 'With Currio',
+    with1: 'Install once, forget about it',
+    with2: 'Browse any website normally',
+    with3: 'See all prices in your currency, automatically',
+    with4: 'That\'s it. No extra steps. Ever.',
+    stat1: 'Unpacked Size',
+    stat2: 'Page Overhead',
+    stat3: 'Rate Cache TTL',
+    ctaTitle: 'Ready to browse without borders?',
+    ctaDesc: 'Free. Lightweight. No account needed.',
+    ctaButton: 'Add to Chrome — It\'s Free',
+    ctaAlt: 'Also available on <a href="https://github.com/gaojice/currio" style="color:var(--color-primary)" target="_blank" rel="noopener">GitHub</a> for manual install.',
+  },
+  'zh-CN': {
+    title: 'Currio — 自动货币转换浏览器扩展',
+    description: 'Currio 在后台默默将任何网页上的所有价格实时转换为你的本国货币，无需点击、无需复制、无需心算。',
+    ogTitle: 'Currio — 自动货币转换器',
+    ogDescription: '每一页的每一种货币，瞬间转换为你的。',
+    navFeatures: '功能',
+    navHow: '使用方式',
+    navPrivacy: '隐私政策',
+    navWhy: '为什么选 Currio',
+    navCTA: '添加至 Chrome',
+    heroBadge: '现已上架 Chrome 应用商店',
+    heroTitle: '打开网页，<br>自动换算。',
+    heroDesc: 'Currio 在后台默默将任何网页上的价格实时转换为你的本国货币。无需点击、无需复制、无需心算。',
+    heroCTA: '添加至 Chrome — 完全免费',
+    heroGitHub: '在 GitHub 查看',
+    demoLabel: '实时演示',
+    demoLine1: '<span class="hero-demo-dot original"></span><span>amazon.com — $1,299</span>',
+    demoLine2: '<span class="hero-demo-dot converted"></span><span>amazon.com — $1,299 <span class="demo-converted-price">¥9,429</span></span>',
+    featuresLabel: '核心功能',
+    featuresTitle: '一次安装，永远省心。',
+    featuresDesc: 'Currio 在后台静默运行。你正常浏览，它处理剩下的一切。',
+    feat1Title: '自动识别',
+    feat1Desc: '识别 $100、¥1000、€50、£30、₩50000、NT$690、HK$100 等几十种货币格式，覆盖所有网站。',
+    feat2Title: '智能推断',
+    feat2Desc: '$ 可能对应 6 种货币。Currio 根据页面语言、浏览器语言、域名后缀和上下文精准推断。',
+    feat3Title: '汇率常新',
+    feat3Desc: '45 分钟缓存 TTL，失败时指数退避重试。始终展示最新汇率，永不过期。',
+    feat4Title: 'React 兼容',
+    feat4Desc: '通过 CSS ::after 伪元素渲染，零 DOM 变更。不会破坏任何 SPA 或响应式框架。',
+    feat5Title: '零配置',
+    feat5Desc: '首次安装时从浏览器语言自动检测你的货币偏好。开箱即用。',
+    feat6Title: '隐私优先',
+    feat6Desc: '无追踪、无分析、无数据收集。汇率请求直接访问 ExchangeRate-API，不经任何中转。',
+    howLabel: '使用方式',
+    howTitle: '只需三步。',
+    howDesc: '安装、浏览，让 Currio 为你完成换算，你只需专注于重要的事。',
+    step1Title: '安装',
+    step1Desc: '从 Chrome 应用商店添加 Currio。它会自动识别你的本地货币。',
+    step2Title: '浏览',
+    step2Desc: '访问任何网站。Currio 会实时扫描页面并随 DOM 更新检测价格。',
+    step3Title: '以你的货币阅读',
+    step3Desc: '转换后的价格内联显示在原始价格旁边——几乎不被注意，直到你需要它。',
+    whyLabel: '为什么选 Currio',
+    whyTitle: '别再在脑子里做换算。',
+    whyDesc: '大多数货币转换器让你复制、粘贴、切换标签页。Currio 在你浏览的地方直接运行。',
+    withoutTitle: '没有 Currio',
+    without1: '从页面上复制价格',
+    without2: '打开新标签页访问货币转换器',
+    without3: '粘贴、选择货币、查看结果',
+    without4: '每个价格都重复一遍',
+    withTitle: '有了 Currio',
+    with1: '安装一次，彻底遗忘',
+    with2: '正常浏览任何网站',
+    with3: '所有价格自动以你的货币显示',
+    with4: '仅此而已。无需额外步骤。',
+    stat1: '安装包大小',
+    stat2: '页面开销',
+    stat3: '汇率缓存 TTL',
+    ctaTitle: '准备好无国界浏览了吗？',
+    ctaDesc: '免费。轻量。无需注册。',
+    ctaButton: '添加至 Chrome — 完全免费',
+    ctaAlt: '也可通过 <a href="https://github.com/gaojice/currio" style="color:var(--color-primary)" target="_blank" rel="noopener">GitHub</a> 手动安装。',
+  }
+};
+
+// ── Detect / load language ─────────────────────────────────────────
+function detectLang() {
+  const stored = localStorage.getItem('currio-lang');
+  if (stored && t[stored]) return stored;
+  const nav = navigator.language || '';
+  return nav.startsWith('zh') ? 'zh-CN' : 'en';
+}
+
+let currentLang = detectLang();
+
+// ── Apply translations ─────────────────────────────────────────────
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  localStorage.setItem('currio-lang', lang);
+
+  // data-i18n (textContent)
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[lang][key]) el.textContent = t[lang][key];
+  });
+
+  // data-i18n-html (innerHTML)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[lang][key]) el.innerHTML = t[lang][key];
+  });
+
+  // data-i18n-attrs (meta tags, etc.)
+  document.querySelectorAll('[data-i18n-attrs]').forEach(el => {
+    const mapping = el.getAttribute('data-i18n-attrs');
+    mapping.split(';').forEach(pair => {
+      const [attr, key] = pair.split(':').map(s => s.trim());
+      if (t[lang][key]) el.setAttribute(attr, t[lang][key]);
+    });
+  });
+
+  // Update lang switch buttons
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
+    const isActive = btn.getAttribute('data-lang') === lang;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+  });
+}
+
+// ── Language switch handlers ────────────────────────────────────────
+document.querySelectorAll('.lang-switch button').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.getAttribute('data-lang')));
+});
+
+// ── Init ────────────────────────────────────────────────────────────
+applyLang(currentLang);
+
+// ── Nav scroll effect ───────────────────────────────────────────────
+const nav = document.getElementById('nav');
+const observer = new IntersectionObserver(
+  ([e]) => nav.classList.toggle('scrolled', e.intersectionRatio < 1),
+  { threshold: [1] }
+);
+const sentinel = document.createElement('div');
+sentinel.style.cssText = 'position:absolute;top:0;height:1px;pointer-events:none';
+document.body.prepend(sentinel);
+observer.observe(sentinel);
+
+// ── Scroll reveal ───────────────────────────────────────────────────
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  },
+  { threshold: 0.15, rootMargin: '0px 0px -48px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── Smooth scroll ───────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+</body>
+</html>
