@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://currio.bytegeek.xyz/sitemap.xml
