@@ -55,10 +55,9 @@ test.describe("Fractional amounts", () => {
 
   test("converts fractional amounts when source ≠ target", async ({ page }) => {
     await page.goto("/fractional.html");
-    // All $ on en-US with USD target → 0 (same currency); non-USD target → 4
-    await page.waitForTimeout(5000);
+    await waitForConversion(page);
     const cnt = await countConversions(page);
-    expect(cnt).toBeGreaterThanOrEqual(0);
+    expect(cnt).toBe(4);
   });
 });
 
@@ -148,8 +147,7 @@ test.describe("Suffixed amounts ($13M, $100k etc.)", () => {
   test("converts suffixed amounts when source ≠ target", async ({ page }) => {
     await page.goto("/suffixed.html");
     const cnt = await waitForConversion(page);
-    // $ on en-US with USD target → 0; with non-USD target → up to 6
-    expect(cnt).toBeGreaterThanOrEqual(0);
+    expect(cnt).toBeGreaterThanOrEqual(6);
   });
 });
 
@@ -157,10 +155,9 @@ test.describe("Suffixed amounts ($13M, $100k etc.)", () => {
 test.describe("Simple price recognition", () => {
   test("recognizes $20 in a single span", async ({ page }) => {
     await page.goto("/semi-button.html");
-    await page.waitForTimeout(5000);
+    await waitForConversion(page);
     const cnt = await countConversions(page);
-    // $20 on en-US → source=USD → may be skipped if target=USD
-    expect(cnt).toBeGreaterThanOrEqual(0);
+    expect(cnt).toBe(1);
     const body = await page.textContent("body");
     expect(body).toContain("$20");
   });
@@ -170,10 +167,9 @@ test.describe("Simple price recognition", () => {
 test.describe("Multi-char currency symbols", () => {
   test("recognizes NT$690 as TWD", async ({ page }) => {
     await page.goto("/ntdollar.html");
-    await page.waitForTimeout(5000);
+    await waitForConversion(page);
     const cnt = await countConversions(page);
-    // NT$ → source TWD, converts unless target=TWD
-    expect(cnt).toBeGreaterThanOrEqual(0);
+    expect(cnt).toBeGreaterThanOrEqual(5);
     const body = await page.textContent("body");
     expect(body).toContain("NT$690");
   });
@@ -200,11 +196,10 @@ test.describe("Split-element recognition", () => {
 
   test("recognizes ￥ in taobao detail price structure", async ({ page }) => {
     await page.goto("/taobao-detail.html");
-    await page.waitForTimeout(5000);
+    await waitForConversion(page);
 
     const cnt = await countConversions(page);
-    // ￥16.9 and ￥19.9 — depends on target vs CNY
-    expect(cnt).toBeGreaterThanOrEqual(0);
+    expect(cnt).toBeGreaterThanOrEqual(2);
 
     const highlight = page.locator(".highlightPrice");
     expect(await highlight.textContent()).toMatch(/16\.9/);

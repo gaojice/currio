@@ -7,7 +7,6 @@
   const hasSymbol = /[$€£¥₩￥]/;
 
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
-  const NUM_RE = /\d+(?:,\d{3})*(?:\.\d{1,6})?/;
   const SYMBOL_PREFIX_RE = /([$€£¥₩￥])\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
   const SYMBOL_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩￥元])/g;
   const MULTI_SYM_RE = /\b(NT\$|HK\$|AU\$|CA\$|S\$|US\$)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
@@ -108,11 +107,6 @@
     return text.length > 1 ? text : null; // must have symbol + at least 1 digit
   }
 
-  function findFirstTextNode(el) {
-    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    return w.nextNode();
-  }
-
   function markDescendantTextNodes(el) {
     const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     let n;
@@ -174,16 +168,6 @@
     }
   }
 
-  function getTextUpToNode(root, stopNode) {
-    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let text = "", n;
-    while ((n = w.nextNode())) {
-      text += n.textContent;
-      if (n === stopNode) break;
-    }
-    return text;
-  }
-
   function textNodeAtOffset(el, targetOffset) {
     const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     let n, pos = 0;
@@ -196,7 +180,6 @@
   }
 
   // ---- Currency Recognition ----
-  function processTextNode(node) { return processText(node.textContent, 0); }
   function processText(text, offset) {
     const matches = [];
 
@@ -437,14 +420,17 @@
           location.reload();
         } else {
           settings = { ...settings, ...msg.settings };
-          if (!settings.autoEnabled || isBlacklisted()) break;
+          if (isBlacklisted()) {
+            clearExisting();
+            break;
+          }
           refreshExisting();
         }
         break;
     }
   });
 
-  function refreshExisting() {
+  function clearExisting() {
     // Clear data-attribute annotations
     document.querySelectorAll("[data-currio-converted]").forEach(el => {
       el.removeAttribute("data-currio-converted");
@@ -454,6 +440,10 @@
     // Clear span annotations
     document.querySelectorAll(`.${CONVERTED_CLASS}`).forEach(span => span.remove());
     processedNodes = new WeakSet();
+  }
+
+  function refreshExisting() {
+    clearExisting();
     scanDocument(document.body);
   }
 

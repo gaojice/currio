@@ -20,6 +20,7 @@ export const test = base.extend({
         "--no-sandbox",
         "--disable-gpu",
       ],
+      locale: "en-US",
       headless: false,
     });
 
@@ -38,6 +39,14 @@ export const test = base.extend({
 
     // Wait for extension to initialize
     await new Promise(r => setTimeout(r, 3000));
+
+    const [background] = context.serviceWorkers();
+    if (background) {
+      await background.evaluate(() => chrome.storage.local.set({
+        targetCurrency: "TWD",
+        blacklist: [],
+      }));
+    }
 
     await use(context);
     await context.close();

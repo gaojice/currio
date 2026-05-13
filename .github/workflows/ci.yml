@@ -46,9 +46,9 @@ jobs:
       - name: Package extension
         run: |
           zip -r currio-v${{ steps.version.outputs.version }}.zip . \
-            -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
+            -x "node_modules/*" ".git/*" ".claude/*" ".wolf/*" "e2e/*" "test-results/*" "scripts/*" \
                ".github/*" "*.DS_Store" ".DS_Store" "landing/*" \
-               "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
+               "package*.json" "playwright*" "*.zip" "CLAUDE.md" "Dockerfile*" "docker-compose*"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -70,9 +70,9 @@ jobs:
       - name: Package extension
         run: |
           zip -r currio-v${{ steps.version.outputs.version }}.zip . \
-            -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" \
+            -x "node_modules/*" ".git/*" ".claude/*" ".wolf/*" "e2e/*" "test-results/*" "scripts/*" \
                ".github/*" "*.DS_Store" ".DS_Store" "landing/*" \
-               "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*"
+               "package*.json" "playwright*" "*.zip" "CLAUDE.md" "Dockerfile*" "docker-compose*"
 
       - uses: softprops/action-gh-release@v2
         with:

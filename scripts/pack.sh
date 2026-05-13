@@ -9,6 +9,9 @@ ZIP="currio-v${VERSION}.zip"
 EXCLUDES=(
   "node_modules/*"
   ".git/*"
+  ".claude/*"
+  ".github/*"
+  ".wolf/*"
   "e2e/*"
   "test-results/*"
   "scripts/*"
@@ -17,21 +20,14 @@ EXCLUDES=(
   "package*.json"
   "playwright*"
   "*.zip"
+  "CLAUDE.md"
 )
 
 echo "Packaging Currio v${VERSION} → ${ZIP}"
 
-# Build exclude args
-EXCLUDE_ARGS=""
-for pattern in "${EXCLUDES[@]}"; do
-  EXCLUDE_ARGS="$EXCLUDE_ARGS -x \"$pattern\""
-done
-
-# Can't use array in simple shell, so use eval or temp file
-echo "$EXCLUDE_ARGS" > /tmp/currio-excludes.txt
-
-# Use rsync-style exclude with temp file
-zip -r "$ZIP" . -x "node_modules/*" ".git/*" "e2e/*" "test-results/*" "scripts/*" "*.DS_Store" ".DS_Store" "package*.json" "playwright*" "*.zip" "Dockerfile*" "docker-compose*" "landing/*"
+# Rebuild from scratch so excluded files from an older archive cannot linger.
+rm -f "$ZIP"
+zip -r "$ZIP" . -x "${EXCLUDES[@]}" "Dockerfile*" "docker-compose*" "landing/*"
 
 echo ""
 echo "Done: $ZIP ($(du -h "$ZIP" | cut -f1))"
