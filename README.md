@@ -101,4 +101,6 @@ MIT
 
 If you find Currio useful, consider buying me a coffee ☕
 
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jicegao)
+
 <img src="assets/support.jpg" width="200" alt="Support QR Code">

@@ -105,4 +105,6 @@ MIT
 
 如果 Currio 对你有帮助，可以考虑请我喝杯咖啡 ☕
 
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jicegao)
+
 <img src="assets/support.jpg" width="200" alt="赞赏码">
