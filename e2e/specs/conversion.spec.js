@@ -79,6 +79,22 @@ test.describe("Currency code formats", () => {
 });
 
 // ============================================================
+test.describe("Amazon-style structured prices", () => {
+  test("converts visible HKD price split across Amazon a-price spans", async ({ page }) => {
+    await page.goto("/amazon-price.html");
+    await waitForConversion(page);
+
+    await expect(page.locator("#offer-price")).toHaveAttribute("data-currio-converted", /NT\$/);
+    await expect(page.locator("#center-column-price")).toHaveAttribute("data-currio-converted", /NT\$/);
+    await expect(page.locator("#subtotal-price")).toHaveAttribute("data-currio-converted", /NT\$/);
+
+    const body = await page.textContent("body");
+    expect(body).toContain("HKD2,648.34");
+    expect(body).toContain("HKD");
+  });
+});
+
+// ============================================================
 test.describe("Dynamic content", () => {
   test("converts dynamically inserted currency amounts", async ({ page }) => {
     await page.goto("/dynamic.html");

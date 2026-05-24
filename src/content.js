@@ -5,6 +5,7 @@
   const DEBOUNCE_MS = 300;
   const THROTTLE_MS = 500;
   const hasSymbol = /[$€£¥₩￥]/;
+  const hasCurrencyCue = /[$€£¥₩￥]|\b(?:USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)(?=\s|\d|$)/i;
 
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
   const SYMBOL_PREFIX_RE = /([$€£¥₩￥])\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
@@ -48,6 +49,8 @@
   // ---- DOM Scanning ----
   function scanDocument(root) {
     if (!rates) return;
+    scanStructuredPrices(root);
+
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         if (processedNodes.has(node)) return NodeFilter.FILTER_REJECT;
@@ -86,6 +89,29 @@
       } else {
         applyReplacements(node, replacements);
       }
+    }
+  }
+
+  function scanStructuredPrices(root) {
+    if (root.nodeType !== Node.ELEMENT_NODE) return;
+
+    const candidates = [];
+    if (root.matches?.(".a-price")) candidates.push(root);
+    candidates.push(...root.querySelectorAll(".a-price"));
+
+    for (const el of candidates) {
+      if (el.hasAttribute("data-currio-converted")) continue;
+      if (el.closest(`.${CONVERTED_CLASS}`)) continue;
+
+      const match = parseStructuredPrice(el);
+      if (!match) continue;
+
+      el.setAttribute("data-currio-converted", CurrioUtils.formatAmount(match.convertedAmount, settings.targetCurrency));
+      if (isSourceAmbiguous(match)) {
+        el.setAttribute("data-currio-ambiguous", "true");
+        el.setAttribute("data-currio-tip", (chrome.i18n?.getMessage("sourceAssumedUSD") || "假定源货币为 USD"));
+      }
+      markDescendantTextNodes(el);
     }
   }
 
@@ -180,6 +206,69 @@
   }
 
   // ---- Currency Recognition ----
+  function parseStructuredPrice(el) {
+    const symbol = firstText(el.querySelectorAll(".a-price-symbol"));
+    const whole = firstText(el.querySelectorAll(".a-price-whole"));
+    const fraction = firstText(el.querySelectorAll(".a-price-fraction"));
+    if (!symbol || !whole) return parsePriceFromHiddenText(el);
+
+    const sourceCurrency = currencyFromSymbolOrCode(symbol);
+    if (!sourceCurrency) return parsePriceFromHiddenText(el);
+
+    const rawAmount = parseStructuredAmount(whole, fraction);
+    if (rawAmount === null) return parsePriceFromHiddenText(el);
+
+    const converted = convert(rawAmount, sourceCurrency);
+    if (converted === null) return parsePriceFromHiddenText(el);
+
+    return {
+      offset: 0,
+      length: el.textContent.length,
+      sourceCurrency,
+      sourceAmount: rawAmount,
+      convertedAmount: converted,
+    };
+  }
+
+  function parsePriceFromHiddenText(el) {
+    const text = firstText(el.querySelectorAll(".a-offscreen, .aok-offscreen")) || normalizeText(el.textContent);
+    const matches = processText(text, 0);
+    return matches[0] || null;
+  }
+
+  function firstText(nodes) {
+    for (const node of nodes) {
+      const text = normalizeText(node.textContent);
+      if (text) return text;
+    }
+    return "";
+  }
+
+  function normalizeText(text) {
+    return (text || "").replace(/\u00a0/g, " ").trim();
+  }
+
+  function currencyFromSymbolOrCode(raw) {
+    const text = normalizeText(raw).toUpperCase();
+    if (/^(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)$/.test(text)) return text;
+    if (MULTI_SYM_MAP[text]) return MULTI_SYM_MAP[text];
+    return CurrioUtils.inferSourceCurrency(
+      raw.trim(),
+      document.documentElement.lang,
+      location.hostname,
+      navigator.language
+    );
+  }
+
+  function parseStructuredAmount(whole, fraction) {
+    const wholePart = normalizeText(whole).replace(/[^\d,]/g, "");
+    if (!wholePart) return null;
+
+    const fractionPart = normalizeText(fraction).replace(/\D/g, "");
+    const amountText = fractionPart ? `${wholePart}.${fractionPart}` : wholePart;
+    return parseNumber(amountText);
+  }
+
   function processText(text, offset) {
     const matches = [];
 
@@ -352,7 +441,7 @@
           }
           continue;
         } else if (m.type === "characterData") {
-          if (!hasSymbol.test(m.target.textContent)) continue;
+          if (!hasCurrencyCue.test(m.target.textContent)) continue;
           processedNodes.delete(m.target);
           const parent = m.target.parentElement;
           if (parent && !SKIP_TAGS.has(parent.tagName) && !parent.closest(`.${CONVERTED_CLASS}`)) {
