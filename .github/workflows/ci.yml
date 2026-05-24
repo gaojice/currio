@@ -43,14 +43,34 @@ jobs:
 
       - name: Get version
         id: version
-        run: echo "version=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            VERSION=$(node -p "require('./manifest.json').version")
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate version format
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! echo "$VERSION" | grep -qE '^[0-9]+(\.[0-9]+){1,3}$'; then
+            echo "::error::Invalid version format '$VERSION'. Must be 1-4 dot-separated numbers (e.g. 1.0.4)"
+            exit 1
+          fi
+
+      - name: Sync manifest version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: node -e "const m=require('./manifest.json');m.version='${{ steps.version.outputs.version }}';require('fs').writeFileSync('./manifest.json',JSON.stringify(m,null,2)+'\n')"
 
       - name: Package extension
         run: |
           zip -r currio-v${{ steps.version.outputs.version }}.zip . \
-            -x "node_modules/*" ".git/*" ".claude/*" ".wolf/*" "e2e/*" "test-results/*" "scripts/*" \
-               ".github/*" "*.DS_Store" ".DS_Store" "landing/*" \
-               "package*.json" "playwright*" "*.zip" "CLAUDE.md" "Dockerfile*" "docker-compose*"
+            -x "node_modules/*" ".git/*" ".claude/*" ".wolf/*" ".idea/*" "e2e/*" \
+               "test-results/*" "scripts/*" ".github/*" "landing/*" \
+               "*.DS_Store" ".DS_Store" "package*.json" "playwright*" "*.zip" \
+               "CLAUDE.md" "Dockerfile*" "docker-compose*"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -73,42 +93,22 @@ jobs:
           files: currio-v${{ needs.build.outputs.version }}.zip
           generate_release_notes: true
 
-      - uses: actions/github-script@v7
-        env:
-          VERSION: ${{ needs.build.outputs.version }}
+  publish:
+    needs: [build, release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
         with:
-          script: |
-            const { owner, repo } = context.repo;
-            const tag = `v${process.env.VERSION}`;
-            const expectedAsset = `currio-v${process.env.VERSION}.zip`;
+          name: currio-v${{ needs.build.outputs.version }}
 
-            const { data: release } = await github.rest.repos.getReleaseByTag({
-              owner,
-              repo,
-              tag,
-            });
-
-            const { data: notes } = await github.rest.repos.generateReleaseNotes({
-              owner,
-              repo,
-              tag_name: tag,
-              target_commitish: context.sha,
-            });
-
-            await github.rest.repos.updateRelease({
-              owner,
-              repo,
-              release_id: release.id,
-              name: tag,
-              body: notes.body,
-            });
-
-            for (const asset of release.assets) {
-              if (asset.name !== expectedAsset) {
-                await github.rest.repos.deleteReleaseAsset({
-                  owner,
-                  repo,
-                  asset_id: asset.id,
-                });
-              }
-            }
+      - name: Upload to Chrome Web Store
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: currio-v${{ needs.build.outputs.version }}.zip
+          extension-id: ${{ secrets.CHROME_EXTENSION_ID }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          publish: true
