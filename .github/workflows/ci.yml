@@ -72,3 +72,43 @@ jobs:
           name: v${{ needs.build.outputs.version }}
           files: currio-v${{ needs.build.outputs.version }}.zip
           generate_release_notes: true
+
+      - uses: actions/github-script@v7
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const tag = `v${process.env.VERSION}`;
+            const expectedAsset = `currio-v${process.env.VERSION}.zip`;
+
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              owner,
+              repo,
+              tag,
+            });
+
+            const { data: notes } = await github.rest.repos.generateReleaseNotes({
+              owner,
+              repo,
+              tag_name: tag,
+              target_commitish: context.sha,
+            });
+
+            await github.rest.repos.updateRelease({
+              owner,
+              repo,
+              release_id: release.id,
+              name: tag,
+              body: notes.body,
+            });
+
+            for (const asset of release.assets) {
+              if (asset.name !== expectedAsset) {
+                await github.rest.repos.deleteReleaseAsset({
+                  owner,
+                  repo,
+                  asset_id: asset.id,
+                });
+              }
+            }
