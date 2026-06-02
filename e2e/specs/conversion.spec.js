@@ -177,6 +177,28 @@ test.describe("Simple price recognition", () => {
     const body = await page.textContent("body");
     expect(body).toContain("$20");
   });
+
+  test("recognizes $6.99 in a CSS-module class span (PlanList pattern)", async ({ page }) => {
+    await page.goto("/planlist-price.html");
+    await waitForConversion(page);
+    const cnt = await countConversions(page);
+    expect(cnt).toBe(1);
+    const body = await page.textContent("body");
+    expect(body).toContain("$6.99");
+  });
+
+  test("recognizes $6.99 dynamically set via textContent on existing span", async ({ page }) => {
+    await page.goto("/dynamic-textcontent.html");
+    // Static span $9.99 should convert immediately
+    await waitForConversion(page);
+    // Dynamic span $6.99 set via textContent after 500ms — wait for observer
+    await page.waitForTimeout(2000);
+    const cnt = await countConversions(page);
+    expect(cnt).toBe(2);
+    const body = await page.textContent("body");
+    expect(body).toContain("$6.99");
+    expect(body).toContain("$9.99");
+  });
 });
 
 // ============================================================

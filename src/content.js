@@ -451,12 +451,24 @@
             }
           }
         } else {
+          let hasCurrencyText = false;
           for (const node of m.addedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(node.tagName)) {
               if (!seenNodes.has(node)) {
                 seenNodes.add(node);
                 pendingNodes.push(node);
               }
+            } else if (node.nodeType === Node.TEXT_NODE && hasCurrencyCue.test(node.textContent)) {
+              hasCurrencyText = true;
+            }
+          }
+          // Handle text nodes added to existing elements (e.g. React textContent updates)
+          if (hasCurrencyText && m.target.nodeType === Node.ELEMENT_NODE &&
+              !SKIP_TAGS.has(m.target.tagName) &&
+              !m.target.closest(`.${CONVERTED_CLASS}`)) {
+            if (!seenNodes.has(m.target)) {
+              seenNodes.add(m.target);
+              pendingNodes.push(m.target);
             }
           }
         }

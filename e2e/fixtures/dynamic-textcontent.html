@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head><meta charset="UTF-8"><title>Dynamic TextContent Test</title></head>
+<body>
+  <!-- Existing empty span — React-style dynamic textContent update -->
+  <span id="price1" class="PlanList_currentPrice__HuEE8"></span>
+
+  <!-- Static span for baseline -->
+  <span id="price2" class="PlanList_anotherPrice__XxXx">$9.99</span>
+
+  <script>
+    // Simulate React: dynamically set textContent on existing empty span
+    setTimeout(() => {
+      document.getElementById('price1').textContent = '$6.99';
+      console.log('[test] textContent set on #price1');
+    }, 500);
+  </script>
+</body>
+</html>
