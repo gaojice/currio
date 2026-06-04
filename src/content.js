@@ -10,8 +10,8 @@
   // Match amounts with up to 6 decimal places (covers crypto, fractional pricing)
   const SYMBOL_PREFIX_RE = /([$€£¥₩￥])\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
   const SYMBOL_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*([$€£¥₩￥元])/g;
-  const MULTI_SYM_RE = /\b(NT\$|HK\$|AU\$|CA\$|S\$|US\$)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
-  const MULTI_SYM_MAP = { "NT$": "TWD", "HK$": "HKD", "AU$": "AUD", "CA$": "CAD", "S$": "SGD", "US$": "USD" };
+  const MULTI_SYM_RE = /\b(NT\$|HK\$|AU\$|CA\$|S\$|US\$|JP¥|CN¥)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/g;
+  const MULTI_SYM_MAP = { "NT$": "TWD", "HK$": "HKD", "AU$": "AUD", "CA$": "CAD", "S$": "SGD", "US$": "USD", "JP¥": "JPY", "CN¥": "CNY" };
   const CODE_RE = /\b(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\s*(\d+(?:,\d{3})*(?:\.\d{1,6})?)(?!\d)/gi;
   const CODE_SUFFIX_RE = /\b(\d+(?:,\d{3})*(?:\.\d{1,6})?)\s*(USD|EUR|GBP|JPY|CNY|TWD|KRW|AUD|CAD|HKD|SGD)\b/gi;
 

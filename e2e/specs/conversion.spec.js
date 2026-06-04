@@ -211,6 +211,16 @@ test.describe("Multi-char currency symbols", () => {
     const body = await page.textContent("body");
     expect(body).toContain("NT$690");
   });
+
+  test("recognizes JP¥2,727 as JPY (not CNY from bare ¥)", async ({ page }) => {
+    await page.goto("/jpyen-price.html");
+    await waitForConversion(page);
+    const cnt = await countConversions(page);
+    expect(cnt).toBeGreaterThanOrEqual(3);
+    const body = await page.textContent("body");
+    expect(body).toContain("JP¥2,727");
+    expect(body).toContain("JP¥1,500");
+  });
 });
 
 // ============================================================
